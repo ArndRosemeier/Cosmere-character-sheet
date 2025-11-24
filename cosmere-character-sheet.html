@@ -1404,6 +1404,22 @@
                 <div class="help-text">Skill ranks are gained through leveling and your chosen path</div>
             </div>
 
+            <div class="point-tracker">
+                <div class="point-tracker-header">
+                    <div class="point-tracker-title">Talent Points</div>
+                    <div class="point-tracker-values">
+                        <span class="points-used" id="talentPointsUsed">0</span>
+                        <span>/</span>
+                        <span class="points-total" id="talentPointsTotal">0</span>
+                        <span class="points-remaining" id="talentPointsRemaining">0 remaining</span>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="talentProgressBar" style="width: 0%"></div>
+                </div>
+                <div class="help-text" id="talentPointsBreakdown">Talents gained through leveling and ancestry bonuses</div>
+            </div>
+
             <div class="sheet-header">
                 <div class="input-group">
                     <label>Character Name</label>
@@ -3412,6 +3428,7 @@
                 // Add ancestry bonus talents (at levels 1, 6, 11, 16, 21)
                 const ancestryBonusLevels = [1, 6, 11, 16, 21];
                 let ancestryBonusTalents = 0;
+                console.log('DEBUG - Ancestry:', char.ancestry, 'Total Level:', totalLevel);
                 for (const bonusLevel of ancestryBonusLevels) {
                     if (totalLevel >= bonusLevel) {
                         // Singers get Change Form automatically at level 1, plus 1 bonus talent
@@ -3419,11 +3436,14 @@
                         // All ancestries get 1 bonus talent at 6, 11, 16, 21
                         if (char.ancestry === 'Singer' && bonusLevel === 1) {
                             ancestryBonusTalents += 2; // Change Form + 1 form talent
+                            console.log('DEBUG - Singer level 1, adding 2 talents');
                         } else {
                             ancestryBonusTalents += 1;
+                            console.log('DEBUG - Level', bonusLevel, 'ancestry bonus, adding 1 talent');
                         }
                     }
                 }
+                console.log('DEBUG - Base talents:', totalTalentPoints, 'Ancestry bonus:', ancestryBonusTalents);
                 totalTalentPoints += ancestryBonusTalents;
                 
                 // Calculate used talent points (path talents + surge talents)
@@ -3437,14 +3457,44 @@
                 this.cachedPointData.usedTalentPoints = usedTalentPoints;
                 this.cachedPointData.remainingTalentPoints = remainingTalentPoints;
                 
-                // Update talent points display
+                // Update talent points display (new tracker UI at top)
+                document.getElementById('talentPointsUsed').textContent = usedTalentPoints;
+                document.getElementById('talentPointsTotal').textContent = totalTalentPoints;
+                document.getElementById('talentPointsRemaining').textContent = remainingTalentPoints + ' remaining';
+                
+                const talentRemainingElem = document.getElementById('talentPointsRemaining');
+                talentRemainingElem.classList.remove('over', 'complete');
+                if (remainingTalentPoints < 0) {
+                    talentRemainingElem.classList.add('over');
+                } else if (remainingTalentPoints === 0 && totalTalentPoints > 0) {
+                    talentRemainingElem.classList.add('complete');
+                }
+                
+                // Update talent progress bar
+                const talentProgress = totalTalentPoints > 0 ? Math.min((usedTalentPoints / totalTalentPoints) * 100, 100) : 0;
+                const talentProgressBar = document.getElementById('talentProgressBar');
+                talentProgressBar.style.width = talentProgress + '%';
+                talentProgressBar.classList.remove('over', 'complete');
+                if (remainingTalentPoints < 0) {
+                    talentProgressBar.classList.add('over');
+                } else if (remainingTalentPoints === 0 && totalTalentPoints > 0) {
+                    talentProgressBar.classList.add('complete');
+                }
+                
+                // Update breakdown help text
+                const baseTalentPoints = totalTalentPoints - ancestryBonusTalents;
+                const breakdownText = ancestryBonusTalents > 0 
+                    ? `${baseTalentPoints} from levels + ${ancestryBonusTalents} from ancestry (${pathTalents} path + ${surgeTalents} surge selected)`
+                    : `${baseTalentPoints} from levels (${pathTalents} path + ${surgeTalents} surge selected)`;
+                document.getElementById('talentPointsBreakdown').textContent = breakdownText;
+                
+                // Also update old display if it exists (for backwards compatibility)
                 const talentPointsElem = document.getElementById('talentPoints');
                 if (talentPointsElem) {
                     if (totalTalentPoints === 0) {
                         talentPointsElem.textContent = `No talents available (Level up to gain talent points)`;
                         talentPointsElem.style.color = 'inherit';
                     } else {
-                        const baseTalentPoints = totalTalentPoints - ancestryBonusTalents;
                         let breakdown = ancestryBonusTalents > 0 
                             ? `${usedTalentPoints}/${totalTalentPoints} used (${baseTalentPoints} level + ${ancestryBonusTalents} ancestry | ${pathTalents} path + ${surgeTalents} surge) - ${remainingTalentPoints} remaining`
                             : `${usedTalentPoints}/${totalTalentPoints} used (${pathTalents} path + ${surgeTalents} surge) - ${remainingTalentPoints} remaining`;
