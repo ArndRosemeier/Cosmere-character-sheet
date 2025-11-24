@@ -3428,7 +3428,6 @@
                 // Add ancestry bonus talents (at levels 1, 6, 11, 16, 21)
                 const ancestryBonusLevels = [1, 6, 11, 16, 21];
                 let ancestryBonusTalents = 0;
-                console.log('DEBUG - Ancestry:', char.ancestry, 'Total Level:', totalLevel);
                 for (const bonusLevel of ancestryBonusLevels) {
                     if (totalLevel >= bonusLevel) {
                         // Singers get Change Form automatically at level 1, plus 1 bonus talent
@@ -3436,14 +3435,11 @@
                         // All ancestries get 1 bonus talent at 6, 11, 16, 21
                         if (char.ancestry === 'Singer' && bonusLevel === 1) {
                             ancestryBonusTalents += 2; // Change Form + 1 form talent
-                            console.log('DEBUG - Singer level 1, adding 2 talents');
                         } else {
                             ancestryBonusTalents += 1;
-                            console.log('DEBUG - Level', bonusLevel, 'ancestry bonus, adding 1 talent');
                         }
                     }
                 }
-                console.log('DEBUG - Base talents:', totalTalentPoints, 'Ancestry bonus:', ancestryBonusTalents);
                 totalTalentPoints += ancestryBonusTalents;
                 
                 // Calculate used talent points (path talents + surge talents)
@@ -4017,12 +4013,27 @@
 
             renderArmorOptions: function() {
                 const select = document.getElementById('equippedArmor');
-                select.innerHTML = '<option value="">None</option>' + 
-                    this.rules.armor.map(armor => 
-                        `<option value="${armor.id}" ${this.currentCharacter.equippedArmor === armor.id ? 'selected' : ''}>
-                            ${armor.name} (Deflect ${armor.deflect})
-                        </option>`
-                    ).join('');
+                
+                // Only show armor that's in the inventory
+                const armorInInventory = this.rules.armor.filter(armor => {
+                    if (!this.currentCharacter.inventory) return false;
+                    // Check if this armor is in inventory (case-insensitive match)
+                    return this.currentCharacter.inventory.some(item => 
+                        item.name.toLowerCase() === armor.name.toLowerCase() ||
+                        item.name.toLowerCase().includes(armor.name.toLowerCase())
+                    );
+                });
+                
+                if (armorInInventory.length === 0) {
+                    select.innerHTML = '<option value="">None (add armor to inventory first)</option>';
+                } else {
+                    select.innerHTML = '<option value="">None</option>' + 
+                        armorInInventory.map(armor => 
+                            `<option value="${armor.id}" ${this.currentCharacter.equippedArmor === armor.id ? 'selected' : ''}>
+                                ${armor.name} (Deflect ${armor.deflect})
+                            </option>`
+                        ).join('');
+                }
             },
 
             renderStartingKitOptions: function() {
@@ -4093,6 +4104,56 @@
                     if (!exists) {
                         this.currentCharacter.connections.push(connection);
                     }
+                }
+                
+                // Add definitive equipment to inventory
+                if (!this.currentCharacter.inventory) {
+                    this.currentCharacter.inventory = [];
+                }
+                if (kit.equipment && kit.equipment.length > 0) {
+                    for (const item of kit.equipment) {
+                        // Skip if it's a placeholder or already in inventory
+                        if (!this.currentCharacter.inventory.some(i => i.name === item)) {
+                            this.currentCharacter.inventory.push({
+                                name: item,
+                                quantity: 1,
+                                notes: `From ${kit.name}`
+                            });
+                        }
+                    }
+                }
+                
+                // Add armor to inventory
+                if (kit.armor && kit.armor !== 'none') {
+                    const armorItems = kit.armor.split(' and ');
+                    for (const armorName of armorItems) {
+                        const armorId = armorName.trim().toLowerCase().replace(' ', '_');
+                        if (!this.currentCharacter.inventory.some(i => i.name === armorName.trim())) {
+                            this.currentCharacter.inventory.push({
+                                name: armorName.trim().charAt(0).toUpperCase() + armorName.trim().slice(1),
+                                quantity: 1,
+                                notes: `Armor from ${kit.name}`
+                            });
+                        }
+                    }
+                }
+                
+                // Handle weapons - trigger weapon selection for choices
+                if (kit.weapons && kit.weapons.length > 0) {
+                    let weaponMessage = 'Your starting kit includes:\n\n';
+                    for (const weaponText of kit.weapons) {
+                        weaponMessage += `• ${weaponText}\n`;
+                    }
+                    weaponMessage += '\nUse the "+ Add Weapon" button below to add your weapons.';
+                    
+                    // Count how many weapon choices need to be made
+                    const choiceCount = kit.weapons.reduce((count, text) => {
+                        if (text.toLowerCase().includes('two ')) return count + 2;
+                        if (text.toLowerCase().includes('one ')) return count + 1;
+                        return count + 1;
+                    }, 0);
+                    
+                    alert(weaponMessage);
                 }
                 
                 this.showStartingKitDetails(kitId);
@@ -4171,6 +4232,7 @@
                 if (!this.currentCharacter.inventory) this.currentCharacter.inventory = [];
                 this.currentCharacter.inventory.push({name, quantity, weight, description});
                 this.renderInventory();
+                this.renderArmorOptions(); // Update armor dropdown
                 this.updateCharacter();
             },
 
@@ -4178,6 +4240,7 @@
                 if (!confirm('Remove this item?')) return;
                 this.currentCharacter.inventory.splice(index, 1);
                 this.renderInventory();
+                this.renderArmorOptions(); // Update armor dropdown
                 this.updateCharacter();
             },
 
