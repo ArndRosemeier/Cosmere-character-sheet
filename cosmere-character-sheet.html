@@ -4129,8 +4129,9 @@
                     for (const armorName of armorItems) {
                         const armorId = armorName.trim().toLowerCase().replace(' ', '_');
                         if (!this.currentCharacter.inventory.some(i => i.name === armorName.trim())) {
+                            const capitalizedName = armorName.trim().charAt(0).toUpperCase() + armorName.trim().slice(1);
                             this.currentCharacter.inventory.push({
-                                name: armorName.trim().charAt(0).toUpperCase() + armorName.trim().slice(1),
+                                name: capitalizedName,
                                 quantity: 1,
                                 notes: `Armor from ${kit.name}`
                             });
