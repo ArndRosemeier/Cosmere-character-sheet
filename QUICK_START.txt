@@ -1,0 +1,75 @@
+╔══════════════════════════════════════════════════════════════════╗
+║         COSMERE CHARACTER SHEET - QUICK START GUIDE              ║
+╚══════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ DAILY USE - NO SERVER NEEDED!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Just double-click: cosmere-character-sheet.html
+  
+  ✓ Works immediately
+  ✓ No installation required
+  ✓ No server needed
+  ✓ Works offline
+  ✓ All 140 talents embedded
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ UPDATING RULES (When needed)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  1. Edit: cosmere-rules.json
+  
+  2. Run: python sync_rules.py
+  
+  3. Done! Your HTML now has the updated rules
+  
+  ✓ Edit rules in clean JSON format
+  ✓ Files stay separate for version control
+  ✓ One command to sync changes
+  ✓ No server required
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ WHAT'S INCLUDED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ✓ 140 Complete Talents
+  ✓ 6 Heroic Paths (Agent, Envoy, Hunter, Leader, Scholar, Warrior)
+  ✓ 18 Specialties (3 per path)
+  ✓ Level 1-10 Progression
+  ✓ Integrated Dice Roller
+  ✓ Auto-calculating Stats
+  ✓ Character Validation
+  ✓ Local Storage Saves
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ TROUBLESHOOTING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Problem: Need to edit rules frequently
+  Solution: Edit cosmere-rules.json, then run: python sync_rules.py
+
+  Problem: Don't have Python
+  Solution: Download from python.org OR just use the HTML as-is!
+
+  Problem: Want to share custom rules
+  Solution: Share your cosmere-rules.json file with friends
+
+  Problem: Messed up the rules file
+  Solution: The HTML still has original rules embedded - you're safe!
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ FOR MORE INFO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  USAGE.md            - Complete usage guide (START HERE!)
+  TALENTS_COMPLETE.md - Complete talent database info
+  README.md           - Full project documentation
+  SERVER_GUIDE.md     - Optional: server for development
+
+╚══════════════════════════════════════════════════════════════════╝
+
