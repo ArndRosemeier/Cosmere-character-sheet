@@ -2526,9 +2526,12 @@
                     }
                     card.onclick = () => this.loadCharacter(char.id);
                     
+                    // Calculate total level from paths
+                    const charLevel = char.paths ? char.paths.reduce((sum, path) => sum + (path.level || 0), 0) : 0;
+                    
                     card.innerHTML = `
                         <h3>${char.name || 'Unnamed Character'}</h3>
-                        <p>Level ${char.level} ${char.heroicPath || 'No Path'}</p>
+                        <p>Level ${charLevel} ${char.heroicPath || 'No Path'}</p>
                         <p>${char.ancestry} • ${char.culture}</p>
                     `;
                     
@@ -2833,8 +2836,6 @@
                     specialty.talents.forEach(talent => {
                         const talentId = `${pathId}_${talent.id}`;
                         const isSelected = this.currentCharacter.talents.includes(talentId);
-                        const prerequisiteMet = this.checkTalentPrerequisite(talent, pathId);
-                        const canSelect = prerequisiteMet || isSelected;
 
                         const activationIcons = {
                             '1_action': '▶',
@@ -2849,13 +2850,13 @@
 
                         html += `
                             <div class="talent-card-inline" 
-                                 style="border: 2px solid ${isSelected ? 'var(--success-color)' : (canSelect ? 'var(--border-color)' : '#ccc')};
-                                        background: ${isSelected ? '#e8f5e9' : (canSelect ? 'white' : '#f5f5f5')};
+                                 style="border: 2px solid ${isSelected ? 'var(--success-color)' : 'var(--border-color)'};
+                                        background: ${isSelected ? '#e8f5e9' : 'white'};
                                         padding: 10px;
                                         border-radius: 4px;
                                         font-size: 0.85em;
-                                        ${canSelect ? 'cursor: pointer;' : 'opacity: 0.6; cursor: not-allowed;'}"
-                                 ${canSelect ? `onclick="app.toggleTalent('${talentId}')"` : ''}>
+                                        cursor: pointer;"
+                                 onclick="app.toggleTalent('${talentId}')">
                                 <div style="font-weight: bold; margin-bottom: 4px;">
                                     ${activationIcon} ${talent.name}
                                     ${isSelected ? ' <span style="color: var(--success-color);">✓</span>' : ''}
@@ -2866,9 +2867,6 @@
                                 <div style="line-height: 1.3;">
                                     ${talent.description}
                                 </div>
-                                ${!prerequisiteMet && !isSelected ? 
-                                    '<div style="color: #f44336; font-size: 0.9em; margin-top: 4px;">⚠️ Prerequisites not met</div>' 
-                                    : ''}
                             </div>
                         `;
                     });
@@ -3069,6 +3067,16 @@
                 const usedAttributePoints = Object.values(char.attributes).reduce((sum, val) => sum + val, 0);
                 const remainingAttributePoints = totalAttributePoints - usedAttributePoints;
                 
+                // Store for use by validateCharacter()
+                this.cachedPointData = {
+                    totalAttributePoints,
+                    usedAttributePoints,
+                    remainingAttributePoints,
+                    totalSkillRanks: 0,
+                    usedSkillRanks: 0,
+                    remainingSkillRanks: 0
+                };
+                
                 // Update attribute tracker UI
                 document.getElementById('attributePointsUsed').textContent = usedAttributePoints;
                 document.getElementById('attributePointsTotal').textContent = totalAttributePoints;
@@ -3106,6 +3114,11 @@
                 const usedSkillRanks = Object.values(char.skills).reduce((sum, rank) => sum + rank, 0);
                 const remainingSkillRanks = totalSkillRanks - usedSkillRanks;
                 
+                // Update cached values for use by validateCharacter()
+                this.cachedPointData.totalSkillRanks = totalSkillRanks;
+                this.cachedPointData.usedSkillRanks = usedSkillRanks;
+                this.cachedPointData.remainingSkillRanks = remainingSkillRanks;
+                
                 // Update skill tracker UI
                 document.getElementById('skillRanksUsed').textContent = usedSkillRanks;
                 document.getElementById('skillRanksTotal').textContent = totalSkillRanks;
@@ -3141,20 +3154,26 @@
                     issues.push('Please enter a character name');
                 }
                 
-                // Validate attribute points
-                let totalAttributePoints = this.rules.attributes.startingTotal;
-                for (let i = 1; i <= char.level; i++) {
-                    const levelData = this.rules.advancement.levelProgression.find(l => l.level === i);
-                    if (levelData) {
-                        totalAttributePoints += levelData.attributeIncreases;
-                    }
+                // Use cached point data from updatePointTrackers() - SINGLE SOURCE OF TRUTH
+                if (!this.cachedPointData) {
+                    // Initialize if not yet set
+                    this.cachedPointData = {
+                        totalAttributePoints: 0,
+                        usedAttributePoints: 0,
+                        remainingAttributePoints: 0,
+                        totalSkillRanks: 0,
+                        usedSkillRanks: 0,
+                        remainingSkillRanks: 0
+                    };
                 }
                 
-                const usedAttributePoints = Object.values(char.attributes).reduce((sum, val) => sum + val, 0);
-                if (usedAttributePoints > totalAttributePoints) {
-                    issues.push(`You have used ${usedAttributePoints - totalAttributePoints} too many attribute points`);
-                } else if (usedAttributePoints < totalAttributePoints) {
-                    warnings.push(`You have ${totalAttributePoints - usedAttributePoints} unspent attribute points`);
+                const { totalAttributePoints, usedAttributePoints, remainingAttributePoints } = this.cachedPointData;
+                
+                // Validate attribute points
+                if (remainingAttributePoints < 0) {
+                    issues.push(`You have used ${-remainingAttributePoints} too many attribute points`);
+                } else if (remainingAttributePoints > 0) {
+                    warnings.push(`You have ${remainingAttributePoints} unspent attribute points`);
                 }
                 
                 // Check for attributes over maximum
@@ -3164,20 +3183,13 @@
                     }
                 }
                 
-                // Validate skill ranks
-                let totalSkillRanks = 0;
-                for (let i = 1; i <= char.level; i++) {
-                    const levelData = this.rules.advancement.levelProgression.find(l => l.level === i);
-                    if (levelData) {
-                        totalSkillRanks += levelData.skillRankIncreases;
-                    }
-                }
+                // Validate skill ranks using cached data
+                const { totalSkillRanks, usedSkillRanks, remainingSkillRanks } = this.cachedPointData;
                 
-                const usedSkillRanks = Object.values(char.skills).reduce((sum, rank) => sum + rank, 0);
-                if (usedSkillRanks > totalSkillRanks) {
-                    issues.push(`You have used ${usedSkillRanks - totalSkillRanks} too many skill ranks`);
-                } else if (usedSkillRanks < totalSkillRanks && totalSkillRanks > 0) {
-                    warnings.push(`You have ${totalSkillRanks - usedSkillRanks} unspent skill ranks`);
+                if (remainingSkillRanks < 0) {
+                    issues.push(`You have used ${-remainingSkillRanks} too many skill ranks`);
+                } else if (remainingSkillRanks > 0 && totalSkillRanks > 0) {
+                    warnings.push(`You have ${remainingSkillRanks} unspent skill ranks`);
                 }
                 
                 // Check for skills over maximum
@@ -3432,7 +3444,8 @@
                 
                 const link = document.createElement('a');
                 link.href = url;
-                link.download = `${this.currentCharacter.name.replace(/[^a-z0-9]/gi, '_')}_${this.currentCharacter.level}.json`;
+                const totalLevel = this.getTotalLevel();
+                link.download = `${this.currentCharacter.name.replace(/[^a-z0-9]/gi, '_')}_${totalLevel}.json`;
                 link.click();
                 
                 URL.revokeObjectURL(url);
