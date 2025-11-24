@@ -3089,9 +3089,9 @@
                     return;
                 }
                 
-                // Check if trying to add a radiant order before level 2
-                if (pathType === 'radiant' && this.getTotalLevel() < 2) {
-                    alert('You can only add a Radiant Order from character level 2 onwards.');
+                // Check if trying to add a radiant order before having any levels
+                if (pathType === 'radiant' && this.getTotalLevel() < 1) {
+                    alert('You must have at least 1 level before adding a Radiant Order.');
                     return;
                 }
                 
