@@ -1516,6 +1516,66 @@
     ]
   },
   
+  "startingKits": [
+    {
+      "id": "academic",
+      "name": "Academic Kit",
+      "weapons": ["One knife, sling, or staff"],
+      "armor": "uniform",
+      "equipment": ["Backpack", "Common clothing", "Ink pen", "Bottle of ink", "10 sheets of paper", "3 empty vials", "Block of wax", "Reference book (topic of choice)", "1 dose of weak poison"],
+      "currency": {"dice": "3d12", "type": "marks"},
+      "bonuses": {"expertise": "Literature (or cultural/utility expertise if already known)"},
+      "description": "For scholars and students"
+    },
+    {
+      "id": "artisan",
+      "name": "Artisan Kit",
+      "weapons": ["One hammer or light weapon (your choice)"],
+      "armor": "leather",
+      "equipment": ["Chest", "Common clothing", "Surgical supplies", "5 doses of weak antiseptic", "Ink pen", "Bottle of ink", "5 sheets of parchment", "5 candles", "Flint and steel", "3 empty glass bottles", "Tuning fork", "Musical instrument (of choice)", "Scale"],
+      "currency": {"dice": "4d8", "type": "marks"},
+      "description": "For craftsmen and artisans"
+    },
+    {
+      "id": "military",
+      "name": "Military Kit",
+      "weapons": ["Two non-special weapons"],
+      "armor": "uniform and chain",
+      "equipment": ["Backpack", "Common clothing", "Waterskin", "Flint and steel", "Whetstone", "Blanket", "10 days of food rations"],
+      "currency": {"dice": "2d6", "type": "marks"},
+      "description": "For soldiers and guards"
+    },
+    {
+      "id": "courtier",
+      "name": "Courtier Kit",
+      "weapons": ["One sidesword, greatsword, longsword, or longbow"],
+      "armor": "none",
+      "equipment": ["Alcohol (bottle of violet wine)", "Fine clothing"],
+      "currency": {"dice": "4d20", "type": "marks"},
+      "bonuses": {"connection": "Patron of noble house (provides accommodations and standard of living)"},
+      "description": "For nobles and diplomats"
+    },
+    {
+      "id": "prisoner",
+      "name": "Prisoner Kit",
+      "weapons": [],
+      "armor": "none",
+      "equipment": ["Manacles", "Ragged clothing"],
+      "currency": {"dice": "0", "type": "marks"},
+      "bonuses": {"connection": "Radiant spren (choose spren type with GM, gain 2 progress boxes on 'Speak the First Ideal' goal if you choose this Order's key talent)"},
+      "description": "For characters starting in captivity"
+    },
+    {
+      "id": "underworld",
+      "name": "Underworld Kit",
+      "weapons": ["Two light weapons"],
+      "armor": "leather",
+      "equipment": ["Backpack", "Common clothing", "Alcohol (bottle of Horneater white)", "Crowbar", "Lockpick", "50 feet of rope", "Flint and steel", "Oil lantern", "Flask of oil", "5 days of street food"],
+      "currency": {"dice": "1d20", "type": "marks"},
+      "description": "For thieves and criminals"
+    }
+  ],
+  
   "conditions": [
     {"id": "blinded", "name": "Blinded", "description": "Cannot see. Attacks against you gain advantage, your attacks gain disadvantage."},
     {"id": "deafened", "name": "Deafened", "description": "Cannot hear. Disadvantage on Perception tests that rely on hearing."},
@@ -1526,6 +1586,177 @@
     {"id": "slowed", "name": "Slowed", "description": "Movement is halved."},
     {"id": "stunned", "name": "Stunned", "description": "Cannot take actions or reactions. Attacks against you gain advantage."},
     {"id": "unconscious", "name": "Unconscious", "description": "Cannot take actions. Drop items. Attacks against you gain advantage and auto-crit within 5 feet."}
-  ]
+  ],
+  
+  "surges": {
+    "abrasion": {
+      "name": "Abrasion",
+      "attribute": "speed",
+      "orders": ["dustbringer", "edgedancer"],
+      "description": "Alters the frictional force on an object's surface",
+      "baseAbility": "Spend 1 Investiture or more to infuse an object or surface, making it frictionless. Alternatively, infuse yourself to use Skate (move fast in straight line) and Slide (squeeze through spaces easier).",
+      "talents": [
+        {"id": "frictionless_motion", "name": "Frictionless Motion", "prerequisite": "Speak the First Ideal", "activation": "always", "description": "While infused with Abrasion, your movement rate increases by 10 feet, and you ignore the Slowed condition when imposed by difficult terrain, climbing, crawling, and swimming."},
+        {"id": "reverse_abrasion", "name": "Reverse Abrasion", "prerequisite": "Speak the First Ideal", "activation": "1_action", "description": "You can increase friction instead of reducing it. Infused targets give an advantage on Agility and Athletics tests and ignore Slowed conditions from surfaces."},
+        {"id": "graceful_skating", "name": "Graceful Skating", "prerequisite": "Frictionless Motion", "activation": "free_action", "description": "When you Skate, you aren't restricted to moving in a straight line."},
+        {"id": "stormlight_reclamation", "name": "Stormlight Reclamation", "prerequisite": "Reverse Abrasion", "activation": "free_action", "description": "At the start of your turn, you can end any number of infusions within your reach to regain their remaining Investiture."},
+        {"id": "slippery_target", "name": "Slippery Target", "prerequisite": "Graceful Skating", "activation": "always", "description": "While infused with Abrasion, attacks can't graze you and Reactive Strikes against you gain a disadvantage."},
+        {"id": "distant_surgebinding", "name": "Distant Surgebinding", "prerequisite": "Reverse Abrasion", "activation": "always", "description": "You can use your surges and their talents as though your reach is 20 feet, and you don't need to touch the target."},
+        {"id": "slick_combatant", "name": "Slick Combatant", "prerequisite": "Slippery Target", "activation": "special", "description": "While infused with Abrasion, you can interrupt a Move with other actions. Once per round, deal extra damage (scaling with Abrasion ranks) on a mid-movement attack."},
+        {"id": "smooth_operator", "name": "Smooth Operator", "prerequisite": "Distant Surgebinding or Slippery Target", "activation": "always", "description": "While you have Investiture, you are infused with Abrasion without spending Investiture, and it costs you 1 fewer focus to Skate."}
+      ]
+    },
+    "adhesion": {
+      "name": "Adhesion",
+      "attribute": "presence",
+      "orders": ["bondsmith", "windrunner"],
+      "description": "Binds things together through Full Lashing",
+      "baseAbility": "Spend 1 Investiture to perform a Full Lashing, sticking two objects or an object to a surface together. The objects must be within reach and 5 feet of each other.",
+      "talents": [
+        {"id": "binding_strike", "name": "Binding Strike", "prerequisite": "Speak the First Ideal", "activation": "special", "description": "After hitting with a melee attack, spend 2 focus or an Opportunity to use Adhesion without spending an action. Automatically succeed on the test."},
+        {"id": "stormlight_reclamation_adhesion", "name": "Stormlight Reclamation", "prerequisite": "Speak the First Ideal", "activation": "free_action", "description": "At the start of your turn, you can end any number of infusions within your reach to regain their remaining Investiture."},
+        {"id": "binding_shot", "name": "Binding Shot", "prerequisite": "Binding Strike", "activation": "special", "description": "You can use Binding Strike when you hit with a ranged attack at any distance."},
+        {"id": "adhesive_trap", "name": "Adhesive Trap", "prerequisite": "Binding Shot", "activation": "1_action", "description": "Infuse a surface with Adhesion. Characters who touch it become Fully Lashed to it automatically."},
+        {"id": "distant_surgebinding_adhesion", "name": "Distant Surgebinding", "prerequisite": "Stormlight Reclamation", "activation": "always", "description": "Use your surges and their talents as though your reach is 20 feet, and you don't need to touch the target."},
+        {"id": "extended_adhesion", "name": "Extended Adhesion", "prerequisite": "Distant Surgebinding", "activation": "always", "description": "Full Lashings expend 1 Investiture per number of rounds equal to your ranks in Adhesion (e.g., 3 ranks = every 3 rounds)."},
+        {"id": "superior_bond", "name": "Superior Bond", "prerequisite": "Adhesive Trap or Extended Adhesion", "activation": "always", "description": "Automatically succeed on opposed tests to maintain Full Lashings against characters with Strength no higher than your ranks in Adhesion."},
+        {"id": "living_adhesion", "name": "Living Adhesion", "prerequisite": "Extended Adhesion", "activation": "1_action", "description": "You can use Adhesion on characters. When Lashed to something larger, they become Restrained, gain disadvantage on physical tests, and attacks against them gain advantage."}
+      ]
+    },
+    "cohesion": {
+      "name": "Cohesion",
+      "attribute": "willpower",
+      "orders": ["stoneward", "willshaper"],
+      "description": "Mold stone as if it were clay (Stoneshaping)",
+      "baseAbility": "Spend 1 Investiture to infuse stone within reach, making it moldable and soft like clay. You can reshape it immediately or with additional actions for intricate work.",
+      "talents": [
+        {"id": "stone_spear", "name": "Stone Spear", "prerequisite": "Speak the First Ideal", "activation": "1_action", "description": "Spend 1 Investiture to make a ranged Cohesion attack vs. Physical of a target within 60 feet, rolling 2d4 impact damage (scales with ranks)."},
+        {"id": "memories_of_stone", "name": "Memories of Stone", "prerequisite": "Speak the First Ideal", "activation": "1_action", "description": "Spend 1 Investiture to communicate with stone you're touching, gaining visions of its history and memories."},
+        {"id": "sinkhole", "name": "Sinkhole", "prerequisite": "Stone Spear", "activation": "1_action", "description": "Spend 1 Investiture to test Cohesion vs. Cognitive of targets on stone ground. On success, they sink and become Immobilized."},
+        {"id": "tunneling", "name": "Tunneling", "prerequisite": "Sinkhole", "activation": "1_action", "description": "Spend 1 Investiture to move through stone as if through difficult terrain, leaving a 5-foot tunnel behind you."},
+        {"id": "through_the_stone", "name": "Through the Stone", "prerequisite": "Sinkhole", "activation": "always", "description": "Use your surges and their talents as though your reach is 20 feet, as long as there's a stone surface between you and your target."},
+        {"id": "true_stoneshaping", "name": "True Stoneshaping", "prerequisite": "Cohesion 2+, Tunneling", "activation": "always", "description": "Intricately and extensively shape stone without using additional actions or time."},
+        {"id": "flowing_earth", "name": "Flowing Earth", "prerequisite": "True Stoneshaping", "activation": "special", "description": "After using Cohesion, shape the stone beneath your feet, pushing yourself in any direction up to 5 feet × your ranks in Cohesion."},
+        {"id": "unbound_cohesion", "name": "Unbound Cohesion", "prerequisite": "Cohesion 4+, Through the Stone", "activation": "always", "description": "Use Cohesion on any solid material that isn't alive, Invested, or infused with Stormlight."}
+      ]
+    },
+    "division": {
+      "name": "Division",
+      "attribute": "intellect",
+      "orders": ["dustbringer", "skybreaker"],
+      "description": "Destroy and decay targets, causing them to crumble or burn",
+      "baseAbility": "Target a character (melee Division attack vs. Spiritual for 3d4 spirit damage, scales with ranks), or destroy an object/area (spend 1+ Investiture to destroy/decay materials).",
+      "talents": [
+        {"id": "bodily_decay", "name": "Bodily Decay", "prerequisite": "Speak the First Ideal", "activation": "special", "description": "When you hit with a Division attack, you can spend an Opportunity to cause one target to suffer an injury."},
+        {"id": "eroding_escape", "name": "Eroding Escape", "prerequisite": "Speak the First Ideal", "activation": "1_action", "description": "Spend 1 or more Investiture to end that many effects inflicting the Restrained or Immobilized condition."},
+        {"id": "igniting_division", "name": "Igniting Division", "prerequisite": "Bodily Decay", "activation": "special", "description": "When you use Division, spend 1 or more Investiture to light the target's space on fire, dealing ongoing damage equal to your Division modifier."},
+        {"id": "spark_sending", "name": "Spark Sending", "prerequisite": "Eroding Escape", "activation": "always", "description": "When there's a solid surface between you and target, use Division as though your reach is 20 feet."},
+        {"id": "gout_of_flame", "name": "Gout of Flame", "prerequisite": "Igniting Division", "activation": "1_action", "description": "Spend 3 Investiture to make a Division attack vs. Physical against each target in an area one size larger than normal."},
+        {"id": "inescapable_spark", "name": "Inescapable Spark", "prerequisite": "Spark Sending", "activation": "always", "description": "Spark Sending extends to your spren bond range. You don't need line of effect when you can sense your target, and they can't Brace against your Division."},
+        {"id": "devastating_division", "name": "Devastating Division", "prerequisite": "Gout of Flame", "activation": "always", "description": "When you roll damage for Division or its talents, roll an additional damage die of the same size."}
+      ]
+    },
+    "gravitation": {
+      "name": "Gravitation",
+      "attribute": "awareness",
+      "orders": ["windrunner", "skybreaker"],
+      "description": "Manipulate gravity through Basic and Reverse Lashings",
+      "baseAbility": "Spend 1 Investiture to perform a Basic Lashing (change gravity direction for yourself or target) or Reverse Lashing (make yourself a source of gravity, pulling nearby objects).",
+      "talents": [
+        {"id": "flying_ace", "name": "Flying Ace", "prerequisite": "Speak the First Ideal", "activation": "1_action", "description": "Fly up to your gravitation rate (permanently increases to 40 feet). Spend 1 focus to make a melee weapon attack during this flight."},
+        {"id": "gravitational_slam", "name": "Gravitational Slam", "prerequisite": "Speak the First Ideal", "activation": "special", "description": "Use a Basic Lashing to collide a target with a solid surface, dealing 1d4 impact damage per 10 feet moved (scales with ranks). Target can Avoid Danger to halve damage."},
+        {"id": "stable_flight", "name": "Stable Flight", "prerequisite": "Flying Ace", "activation": "always", "description": "While maintaining a Basic Lashing on yourself, your ranged attacks don't gain disadvantage due to flying or unstable footing."},
+        {"id": "multiple_lashings", "name": "Multiple Lashings", "prerequisite": "Gravitational Slam", "activation": "special", "description": "When you move an unwilling character with Gravitation, infuse Investiture up to your ranks in Gravitation to prolong the effect."},
+        {"id": "group_flight", "name": "Group Flight", "prerequisite": "Stable Flight", "activation": "special", "description": "When you use a Basic Lashing out of combat, infuse additional characters up to your ranks in Gravitation without spending additional Investiture."},
+        {"id": "lashing_shot", "name": "Lashing Shot", "prerequisite": "Gravitational Slam", "activation": "1_action", "description": "Propel an object at a target, making a ranged Gravitation attack vs. Physical, rolling 2d4 impact damage (scales with ranks)."},
+        {"id": "master_of_the_skies", "name": "Master of the Skies", "prerequisite": "Group Flight or Lashing Shot", "activation": "always", "description": "While you have 1 Investiture or more, you gain the benefits of being infused with Gravitation without spending Investiture."}
+      ]
+    },
+    "illumination": {
+      "name": "Illumination",
+      "attribute": "presence",
+      "orders": ["lightweaver", "truthwatcher"],
+      "description": "Create convincing visual and auditory illusions (Lightweaving)",
+      "baseAbility": "Spend 1 Investiture to Lightweave an illusion in a space within spren bond range (simple: 1 per 10 min, complex: 1 per round). Can also create an illusory disguise on yourself while having Investiture.",
+      "talents": [
+        {"id": "distracting_illusion", "name": "Distracting Illusion", "prerequisite": "Speak the First Ideal", "activation": "1_action", "description": "Spend 1 Investiture to Lightweave an illusion of yourself or an ally. Until an attack misses the target, attacks against them gain disadvantage and can't graze."},
+        {"id": "lingering_lightweavings", "name": "Lingering Lightweavings", "prerequisite": "Speak the First Ideal", "activation": "1_action", "description": "You can infuse an illusion in a sphere. The illusion moves with the sphere, expending 1 Investiture per rounds equal to your ranks in Illumination."},
+        {"id": "disorienting_flash", "name": "Disorienting Flash", "prerequisite": "Distracting Illusion", "activation": "1_action", "description": "Spend 1 Investiture to project light in an area, testing Illumination vs. Cognitive of each character to make them Disoriented."},
+        {"id": "stormlight_reclamation_illumination", "name": "Stormlight Reclamation", "prerequisite": "Distracting Illusion", "activation": "free_action", "description": "End Illumination infusions within spren bond range and recover their remaining Investiture."},
+        {"id": "spiritual_illumination", "name": "Spiritual Illumination", "prerequisite": "Disorienting Flash", "activation": "1_action", "description": "Spend 2 Investiture to cause an ally to become Determined and Focused."},
+        {"id": "multiplicative_lightweaving", "name": "Multiplicative Lightweaving", "prerequisite": "Stormlight Reclamation", "activation": "special", "description": "You can Lightweave additional illusions, up to your ranks in Illumination, with no additional Investiture."},
+        {"id": "painful_truth", "name": "Painful Truth", "prerequisite": "Spiritual Illumination", "activation": "1_action", "description": "Spend 2 Investiture and test Illumination vs. Spiritual of a target. On success, they are Slowed and must Move away on their next turn or spend focus to avoid doing so."},
+        {"id": "endless_illusions", "name": "Endless Illusions", "prerequisite": "Multiplicative Lightweaving or Painful Truth", "activation": "always", "description": "While you have Investiture, Illumination infusions in your spren bond range don't expend Investiture."}
+      ]
+    },
+    "progression": {
+      "name": "Progression",
+      "attribute": "awareness",
+      "orders": ["edgedancer", "truthwatcher"],
+      "description": "Encourage growth and healing in living things",
+      "baseAbility": "Spend Investiture to use Growth (rapidly grow plants) or Regrowth (heal living beings). Regenerate action: recover health equal to your Progression modifier.",
+      "talents": [
+        {"id": "injury_regrowth", "name": "Injury Regrowth", "prerequisite": "Speak the First Ideal", "activation": "1_action", "description": "Spend 2 Investiture to cause a target to recover from a temporary injury, or spend 3 Investiture to recover from a permanent one."},
+        {"id": "explosive_growth", "name": "Explosive Growth", "prerequisite": "Speak the First Ideal", "activation": "1_action", "description": "Spend 1 Investiture to explosively grow plants in an area. Make a Progression attack vs. Physical of each chosen character, rolling 2d4 impact or keen damage (scales with ranks)."},
+        {"id": "swift_regeneration", "name": "Swift Regeneration", "prerequisite": "Progression 2+, Injury Regrowth", "activation": "special", "description": "When you Regenerate, recover health equal to 1d6 + your Progression modifier (scales with ranks). While you have Investiture, you and your Regrowth targets can add your Progression modifier to injury rolls."},
+        {"id": "overgrowth", "name": "Overgrowth", "prerequisite": "Explosive Growth", "activation": "special", "description": "When you infuse Growth into a plant, test Progression (DC 15) to cause it to grow much larger and stronger than its species' normal limits."},
+        {"id": "extended_regrowth", "name": "Extended Regrowth", "prerequisite": "Swift Regeneration", "activation": "always", "description": "Your Regrowth infusions only expend 1 Investiture per rounds equal to your ranks in Progression."},
+        {"id": "reliable_progression", "name": "Reliable Progression", "prerequisite": "Progression 2+, Overgrowth", "activation": "always", "description": "When you roll a Progression die, if the result is lower than your ranks in Progression, change the result to equal your ranks."},
+        {"id": "from_the_brink", "name": "From the Brink", "prerequisite": "Progression 3+, Extended Regrowth", "activation": "1_action", "description": "Spend 3 Investiture to restore life to a willing character who died within the last minute. They return Unconscious with 0 health."},
+        {"id": "font_of_life", "name": "Font of Life", "prerequisite": "Extended Regrowth or Reliable Progression", "activation": "always", "description": "It costs you one Opportunity fewer to use Progression and its talents."}
+      ]
+    },
+    "tension": {
+      "name": "Tension",
+      "attribute": "strength",
+      "orders": ["bondsmith", "stoneward"],
+      "description": "Alter the rigidity of soft materials, making them firm like steel",
+      "baseAbility": "Spend 1 Investiture to infuse a soft object, making it completely rigid. Can grant Hardened Defense (+2 Physical defense) or temporarily create weapons from cloth/rope.",
+      "talents": [
+        {"id": "tension_parry", "name": "Tension Parry", "prerequisite": "Speak the First Ideal", "activation": "reaction", "description": "Spend 2 focus to flare Tension in your clothing or a held object, causing an attack to miss."},
+        {"id": "stormlight_reclamation_tension", "name": "Stormlight Reclamation", "prerequisite": "Speak the First Ideal", "activation": "free_action", "description": "End Tension infusions within reach and recover their remaining Investiture."},
+        {"id": "rigged_weaponry", "name": "Rigged Weaponry", "prerequisite": "Tension Parry", "activation": "special", "description": "Spend 1 Investiture to increase your melee weapon's reach by 10 feet. When you hit with a melee attack, spend an Opportunity or 2 focus to infuse Tension into an object the target is holding."},
+        {"id": "extended_tension", "name": "Extended Tension", "prerequisite": "Stormlight Reclamation", "activation": "always", "description": "Your Tension infusions only expend 1 Investiture per rounds equal to your ranks in Tension. While you have Investiture, you can freely maintain Tension infusions on objects you're holding."},
+        {"id": "surface_tension", "name": "Surface Tension", "prerequisite": "Rigged Weaponry", "activation": "1_action", "description": "Use Tension to increase a liquid's surface tension and walk on it like solid ground."},
+        {"id": "cloth_mastery", "name": "Cloth Mastery", "prerequisite": "Tension 2+, Extended Tension", "activation": "always", "description": "Use Tension to instantly create intricate and complex objects."},
+        {"id": "fine_control", "name": "Fine Control", "prerequisite": "Cloth Mastery", "activation": "special", "description": "Spend Investiture to infuse an object you can control with Opportunities while touching it. It can move up to 25 feet along surfaces, perform tasks, and make attacks using your Tension (2d4 impact damage, scales with ranks)."},
+        {"id": "clothsmith", "name": "Clothsmith", "prerequisite": "Fine Control or Surface Tension", "activation": "always", "description": "Your Hardened Defense effect increases the target's Physical defense by 4 instead of 2. When you temporarily create a weapon with Tension, it gains an extra d4 damage die."}
+      ]
+    },
+    "transformation": {
+      "name": "Transformation",
+      "attribute": "willpower",
+      "orders": ["lightweaver", "elsecaller"],
+      "description": "Transform matter from one Essence to another (Soulcasting)",
+      "baseAbility": "Spend Investiture to transform non-living objects between Essences (Clear Air, Liquid, Wood/Grain, Flesh/Bone, Stone). More distant transformations cost more and have higher DCs. Can also create Soulcast Defense to deflect attacks.",
+      "talents": [
+        {"id": "essence_essence", "name": "Essence to Essence", "prerequisite": "Speak the First Ideal", "activation": "1_action", "description": "Reduce the Investiture cost of Soulcasting by 1 when transforming between Essences that are adjacent on the list."},
+        {"id": "living_soulcasting", "name": "Living Soulcasting", "prerequisite": "Speak the First Ideal", "activation": "1_action", "description": "Spend 1 Investiture and make a melee Transformation attack vs. Spiritual of a living organism, rolling 3d4 spirit damage (scales with ranks). The target dies if reduced to 0 health."},
+        {"id": "soulcast_parry", "name": "Soulcast Parry", "prerequisite": "Living Soulcasting", "activation": "reaction", "description": "You can use Soulcast Defense on melee weapon attacks."},
+        {"id": "bloodcasting", "name": "Bloodcasting", "prerequisite": "Essence to Essence", "activation": "1_action", "description": "Spend 1 Investiture and test Transformation (DC 15) to cleanse all poison from the target and reduce one injury's recovery time by 5 days."},
+        {"id": "distant_surgebinding_transformation", "name": "Distant Surgebinding", "prerequisite": "Soulcast Parry", "activation": "always", "description": "Use your surges and their talents as though your reach is 20 feet."},
+        {"id": "flamecasting", "name": "Flamecasting", "prerequisite": "Soulcast Parry", "activation": "1_action", "description": "You gain 'Flame' as a sixth category (DC 30 to transform stone to flame). When Soulcasting flames, attack each character within 5 feet using Transformation vs. Physical, rolling 2d4 energy damage (scales with ranks)."},
+        {"id": "persistent_transformation", "name": "Persistent Transformation", "prerequisite": "Transformation 2+, Distant Surgebinding", "activation": "always", "description": "When transforming non-living objects, your max DC is 15. You can reattempt Soulcasting, but on success, must spend 1 additional Investiture per recent failure."},
+        {"id": "expansive_transmuter", "name": "Expansive Transmuter", "prerequisite": "Flamecasting", "activation": "always", "description": "Soulcasting non-living material costs 2 fewer Investiture."}
+      ]
+    },
+    "transportation": {
+      "name": "Transportation",
+      "attribute": "intellect",
+      "orders": ["elsecaller", "willshaper"],
+      "description": "Peer into and travel through the Cognitive Realm (Shadesmar)",
+      "baseAbility": "Peer into the Cognitive Realm to sense nearby flames (indicating living beings), Invested objects, and the environment. Can attempt Realmic Step to teleport short distances.",
+      "talents": [
+        {"id": "cognitive_farsight", "name": "Cognitive Farsight", "prerequisite": "Speak the First Ideal", "activation": "always", "description": "You can spot things in the Cognitive Realm up to a distance equal to 3 × your spren bond range. While you have Investiture, you can identify north and the direction to the nearest settlement."},
+        {"id": "realmic_evasion", "name": "Realmic Evasion", "prerequisite": "Speak the Second Ideal", "activation": "reaction", "description": "Before you're hit by an attack, spend 1 Investiture and test Transportation (DC equals triggering attack). On failure, the attack grazes. On success, the attack misses."},
+        {"id": "cognitive_vision", "name": "Cognitive Vision", "prerequisite": "Cognitive Farsight", "activation": "special", "description": "When you use Transportation to look into the Cognitive Realm, you can learn an enemy's intent by testing Transportation vs. Cognitive, and you can learn about your immediate environment."},
+        {"id": "realmic_step", "name": "Realmic Step", "prerequisite": "Realmic Evasion", "activation": "1_action", "description": "Test Transportation (DC 15) and spend 2 Investiture to transport yourself to a space within spren bond range."},
+        {"id": "shared_transportation", "name": "Shared Transportation", "prerequisite": "Transportation 4+, Realmic Step", "activation": "special", "description": "When you transport yourself, spend 1 Investiture or more to bring that many additional characters with you."},
+        {"id": "elsecalling", "name": "Elsecalling", "prerequisite": "Speak the Third Ideal, Realmic Step", "activation": "1_action", "description": "Spend 1 Investiture to transport yourself from the Physical to the Cognitive Realm, or test Transportation (DC 20) and spend 2 Investiture to transport from the Cognitive to the Physical Realm."},
+        {"id": "elsegate", "name": "Elsegate", "prerequisite": "Speak the Fourth Ideal, Shared Transportation", "activation": "special", "description": "Transport yourself and up to ten companions to an Oathgate or permanent perpendicularity you've visited before."},
+        {"id": "realmwalker", "name": "Realmwalker", "prerequisite": "Elsecalling or Cognitive Vision", "activation": "always", "description": "When you test Transportation for a talent, you automatically succeed."}
+      ]
+    }
+  }
 }
 
