@@ -4117,7 +4117,8 @@
                             this.currentCharacter.inventory.push({
                                 name: item,
                                 quantity: 1,
-                                notes: `From ${kit.name}`
+                                weight: 0, // Kit items don't specify weight
+                                description: `From ${kit.name}`
                             });
                         }
                     }
@@ -4130,10 +4131,14 @@
                         const armorId = armorName.trim().toLowerCase().replace(' ', '_');
                         if (!this.currentCharacter.inventory.some(i => i.name === armorName.trim())) {
                             const capitalizedName = armorName.trim().charAt(0).toUpperCase() + armorName.trim().slice(1);
+                            // Get weight from armor definition if available
+                            const armorDef = this.rules.armor.find(a => a.id === armorId);
+                            const weight = armorDef ? armorDef.weight : 0;
                             this.currentCharacter.inventory.push({
                                 name: capitalizedName,
                                 quantity: 1,
-                                notes: `Armor from ${kit.name}`
+                                weight: weight,
+                                description: `Armor from ${kit.name}`
                             });
                         }
                     }
@@ -4254,13 +4259,15 @@
 
                 let totalWeight = 0;
                 container.innerHTML = this.currentCharacter.inventory.map((item, index) => {
-                    totalWeight += item.weight * item.quantity;
+                    const itemWeight = item.weight || 0; // Default to 0 if weight is missing
+                    const itemQuantity = item.quantity || 1; // Default to 1 if quantity is missing
+                    totalWeight += itemWeight * itemQuantity;
                     return `
                         <div class="item-card">
                             <div style="flex: 1;">
-                                <div style="font-weight: bold;">${item.name} ${item.quantity > 1 ? `(×${item.quantity})` : ''}</div>
+                                <div style="font-weight: bold;">${item.name} ${itemQuantity > 1 ? `(×${itemQuantity})` : ''}</div>
                                 ${item.description ? `<div style="font-size: 0.9em; color: var(--text-secondary); margin-top: 4px;">${item.description}</div>` : ''}
-                                <div style="font-size: 0.85em; margin-top: 4px;">Weight: ${item.weight * item.quantity} lbs</div>
+                                ${itemWeight > 0 ? `<div style="font-size: 0.85em; margin-top: 4px;">Weight: ${itemWeight * itemQuantity} lbs</div>` : ''}
                             </div>
                             <div class="item-actions">
                                 <button onclick="app.removeInventoryItem(${index})" class="danger">×</button>
