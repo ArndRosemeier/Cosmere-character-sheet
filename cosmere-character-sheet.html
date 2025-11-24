@@ -2545,9 +2545,24 @@
                     // Calculate total level from paths
                     const charLevel = char.paths ? char.paths.reduce((sum, path) => sum + (path.level || 0), 0) : 0;
                     
+                    // Build paths display
+                    let pathsDisplay = 'No Paths';
+                    if (char.paths && char.paths.length > 0) {
+                        pathsDisplay = char.paths
+                            .filter(p => (p.level || 0) > 0)
+                            .map(p => {
+                                const pathData = p.type === 'heroic' 
+                                    ? this.rules.heroicPaths.find(hp => hp.id === p.id)
+                                    : this.rules.radiantOrders.find(ro => ro.id === p.id);
+                                const pathName = pathData ? pathData.name : p.id;
+                                return `${pathName} ${p.level}`;
+                            })
+                            .join(' • ') || 'No Paths';
+                    }
+                    
                     card.innerHTML = `
                         <h3>${char.name || 'Unnamed Character'}</h3>
-                        <p>Level ${charLevel} ${char.heroicPath || 'No Path'}</p>
+                        <p>Level ${charLevel} - ${pathsDisplay}</p>
                         <p>${char.ancestry} • ${char.culture}</p>
                     `;
                     
@@ -3449,8 +3464,9 @@
                 }
                 
                 // Validate heroic path selection
-                if (!char.heroicPath) {
-                    issues.push('Please select a Heroic Path');
+                const hasHeroicPath = char.paths && char.paths.some(p => p.type === 'heroic' && (p.level || 0) > 0);
+                if (!hasHeroicPath) {
+                    warnings.push('Consider selecting a Heroic Path');
                 }
                 
                 // Validate purpose and obstacle (recommended but not required)
