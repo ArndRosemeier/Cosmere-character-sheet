@@ -3146,9 +3146,9 @@
                         presence: 2
                     },
                     skills: {},
-                    currentHealth: 16,
-                    currentFocus: 8,
-                    currentInvestiture: 4,
+                    currentHealth: 12, // Base 10 + Str 2
+                    currentFocus: 7,   // Base 5 + Wil 2
+                    currentInvestiture: 0, // No Radiant path yet
                     deflect: 0,
                     paths: [], // Multi-path system
                     talents: [],
@@ -3190,6 +3190,15 @@
 
                 this.characters.push(newChar);
                 this.loadCharacter(newChar.id);
+                
+                // Set current resources to match calculated max values for new character
+                if (this.currentCharacter) {
+                    this.currentCharacter.currentHealth = this.currentCharacter.maxHealth;
+                    this.currentCharacter.currentFocus = this.currentCharacter.maxFocus;
+                    this.currentCharacter.currentInvestiture = this.currentCharacter.maxInvestiture || 0;
+                    this.renderCharacterSheet(); // Re-render with corrected values
+                }
+                
                 this.saveToLocalStorage();
             },
 
