@@ -2932,12 +2932,12 @@
 
                 title.textContent = label || 'Roll';
                 
-                // If this is a weapon attack with hit/graze damage, show all values prominently
-                if (result.hitDamage !== undefined && result.grazeDamage !== undefined) {
+                // If this is a weapon attack with hit/graze/crit damage, show all values prominently
+                if (result.hitDamage !== undefined && result.grazeDamage !== undefined && result.critDamage !== undefined) {
                     resultElem.innerHTML = `
                         <div style="font-size: 2em; font-weight: bold;">${result.total}</div>
                         <div style="font-size: 0.8em; color: #999; margin-top: 5px;">
-                            Hit: ${result.hitDamage} dmg | Graze: ${result.grazeDamage} dmg
+                            Hit: ${result.hitDamage} dmg | Graze: ${result.grazeDamage} dmg | Crit ⭐: ${result.critDamage} dmg
                         </div>
                     `;
                 } else if (result.damageTotal !== undefined) {
@@ -3037,8 +3037,19 @@
                     const hitDamage = damageResult.total + attackBonus; // Hit = dice + skill modifier
                     const grazeDamage = damageResult.total; // Graze = dice only
                     
+                    // Calculate critical hit damage (maximize all dice)
+                    const damageNotation = damage.toLowerCase().replace(/\s/g, '');
+                    const damageMatch = damageNotation.match(/(\d+)?d(\d+)/);
+                    let critDamage = attackBonus; // Start with modifier
+                    if (damageMatch) {
+                        const numDice = parseInt(damageMatch[1]) || 1;
+                        const dieSize = parseInt(damageMatch[2]);
+                        critDamage += numDice * dieSize; // All dice at maximum
+                    }
+                    
                     breakdown += `<br><strong>Damage (if hit):</strong> ${damageResult.breakdown.replace(/<br>/g, ' ')} + ${attackBonus} = <strong>${hitDamage}</strong>`;
                     breakdown += `<br><strong>Damage (if graze):</strong> ${damageResult.breakdown.replace(/<br>/g, ' ')} = <strong>${grazeDamage}</strong>`;
+                    breakdown += `<br><strong>Damage (if crit ⭐):</strong> Max dice + ${attackBonus} = <strong>${critDamage}</strong>`;
                 } else {
                     breakdown += `<br><strong>Damage:</strong> ${damage}`;
                 }
@@ -3048,6 +3059,16 @@
                     damageTotal: damageResult ? damageResult.total : 0,
                     hitDamage: damageResult ? damageResult.total + attackBonus : 0,
                     grazeDamage: damageResult ? damageResult.total : 0,
+                    critDamage: damageResult ? (() => {
+                        const damageNotation = damage.toLowerCase().replace(/\s/g, '');
+                        const damageMatch = damageNotation.match(/(\d+)?d(\d+)/);
+                        if (damageMatch) {
+                            const numDice = parseInt(damageMatch[1]) || 1;
+                            const dieSize = parseInt(damageMatch[2]);
+                            return numDice * dieSize + attackBonus;
+                        }
+                        return attackBonus;
+                    })() : 0,
                     breakdown: breakdown,
                     diceRolls: [d20Roll, ...(damageResult ? damageResult.diceRolls : [])]
                 };
