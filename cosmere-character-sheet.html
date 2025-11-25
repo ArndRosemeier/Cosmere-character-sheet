@@ -2296,10 +2296,18 @@
                     </div>
                 </div>
 
-                <!-- Inventory -->
-                <h3 style="margin-top: 25px;">🎒 Inventory</h3>
-                <div id="inventoryList" class="items-list"></div>
-                <button onclick="app.addInventoryItem()" style="margin-top: 10px;">+ Add Item</button>
+                <!-- Inventory (Collapsible) -->
+                <div style="margin-top: 25px;">
+                    <h3 style="cursor: pointer; user-select: none; display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(68,138,255,0.1); border-radius: 6px;" 
+                        onclick="app.toggleInventory()">
+                        <span>🎒 Inventory</span>
+                        <span id="inventoryToggleIcon" style="transition: transform 0.3s;">▼</span>
+                    </h3>
+                    <div id="inventoryContent" style="margin-top: 10px;">
+                        <div id="inventoryList" class="items-list"></div>
+                        <button onclick="app.addInventoryItem()" style="margin-top: 10px;">+ Add Item</button>
+                    </div>
+                </div>
             </div>
 
             <!-- Injuries & Conditions Section -->
@@ -5031,6 +5039,21 @@
                 this.renderInventory();
                 this.renderArmorOptions(); // Update armor dropdown
                 this.updateCharacter();
+            },
+
+            toggleInventory: function() {
+                const content = document.getElementById('inventoryContent');
+                const icon = document.getElementById('inventoryToggleIcon');
+                
+                if (content.style.display === 'none') {
+                    content.style.display = 'block';
+                    icon.textContent = '▼';
+                    icon.style.transform = 'rotate(0deg)';
+                } else {
+                    content.style.display = 'none';
+                    icon.textContent = '▶';
+                    icon.style.transform = 'rotate(-90deg)';
+                }
             },
 
             renderInventory: function() {
