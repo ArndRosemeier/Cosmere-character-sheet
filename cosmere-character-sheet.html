@@ -1586,6 +1586,57 @@
             padding-top: 30px;
             border-top: 3px solid var(--border-color);
         }
+
+        /* ===== COLLAPSIBLE SECTIONS (UNIVERSAL) ===== */
+        .section-header {
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: linear-gradient(135deg, rgba(68,138,255,0.15), rgba(68,138,255,0.05));
+            border: 2px solid rgba(68,138,255,0.3);
+            border-radius: 8px;
+            margin: 20px 0 10px 0;
+            transition: all 0.2s;
+        }
+
+        .section-header:hover {
+            background: linear-gradient(135deg, rgba(68,138,255,0.25), rgba(68,138,255,0.15));
+            border-color: rgba(68,138,255,0.5);
+        }
+
+        .section-header h2,
+        .section-header h3 {
+            margin: 0;
+            font-size: 1.3em;
+            color: var(--accent-color);
+        }
+
+        .section-toggle-icon {
+            font-size: 1.2em;
+            transition: transform 0.3s;
+            color: var(--accent-color);
+        }
+
+        .section-header.collapsed .section-toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        .section-content {
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, opacity 0.3s;
+            max-height: 5000px;
+            opacity: 1;
+        }
+
+        .section-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+            margin: 0;
+            padding: 0;
+        }
     </style>
 </head>
 <body>
@@ -1980,29 +2031,42 @@
                 <div class="help-text" id="talentPointsBreakdown">Talents gained through leveling and ancestry bonuses</div>
             </div>
 
-            <div class="sheet-header">
-                <div class="input-group">
-                    <label>Character Name</label>
-                    <input type="text" id="characterName" placeholder="Enter name..." oninput="app.updateCharacter(); app.recalculateAll();">
+            <!-- Basic Information Section -->
+            <div class="section-header collapsed" id="basicInfoHeader" onclick="app.toggleSection('basicInfo')">
+                <h2>📝 Basic Information</h2>
+                <span class="section-toggle-icon">▼</span>
+            </div>
+            <div class="section-content collapsed" id="basicInfoContent">
+                <div class="sheet-header">
+                    <div class="input-group">
+                        <label>Character Name</label>
+                        <input type="text" id="characterName" placeholder="Enter name..." oninput="app.updateCharacter(); app.recalculateAll();">
+                    </div>
+                    <div class="input-group">
+                        <label>Player Name</label>
+                        <input type="text" id="playerName" placeholder="Your name..." onchange="app.updateCharacter()">
+                    </div>
+                    <div class="input-group">
+                        <label>Ancestry</label>
+                        <select id="ancestry" onchange="app.updateCharacter()"></select>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label>Player Name</label>
-                    <input type="text" id="playerName" placeholder="Your name..." onchange="app.updateCharacter()">
-                </div>
-                <div class="input-group">
-                    <label>Ancestry</label>
-                    <select id="ancestry" onchange="app.updateCharacter()"></select>
+
+                <div class="input-group" style="margin-bottom: 20px;">
+                    <label>Culture</label>
+                    <select id="culture" onchange="app.updateCharacter()"></select>
                 </div>
             </div>
 
-            <div class="input-group" style="margin-bottom: 20px;">
-                <label>Culture</label>
-                <select id="culture" onchange="app.updateCharacter()"></select>
+            <!-- Attributes & Skills Section -->
+            <div class="section-header collapsed" id="attributesSkillsHeader" onclick="app.toggleSection('attributesSkills')">
+                <h2>💪 Attributes & Skills</h2>
+                <span class="section-toggle-icon">▼</span>
             </div>
-
-            <div class="stats-grid">
-                <div class="stat-column physical">
-                    <h3>Physical</h3>
+            <div class="section-content collapsed" id="attributesSkillsContent">
+                <div class="stats-grid">
+                    <div class="stat-column physical">
+                        <h3>Physical</h3>
                     
                     <div class="attribute-box">
                         <div class="attribute-row">
@@ -2135,11 +2199,18 @@
                         <div id="spiritualSkills"></div>
                     </div>
                 </div>
-            </div>
+                </div>
+            </div><!-- End attributesSkillsContent -->
 
-            <div class="resources-section">
-                <div class="resource-box">
-                    <div class="resource-label">Health</div>
+            <!-- Defenses & Resources Section -->
+            <div class="section-header collapsed" id="resourcesHeader" onclick="app.toggleSection('resources')">
+                <h2>🛡️ Defenses & Resources</h2>
+                <span class="section-toggle-icon">▼</span>
+            </div>
+            <div class="section-content collapsed" id="resourcesContent">
+                <div class="resources-section">
+                    <div class="resource-box">
+                        <div class="resource-label">Health</div>
                     <div class="resource-values">
                         <input type="number" class="resource-current" id="currentHealth" min="0" onchange="app.updateCharacter()">
                         <span>/</span>
@@ -2203,11 +2274,16 @@
                         <div class="resource-max auto-calc" id="liftingCapacity">200 lbs</div>
                     </div>
                 </div>
-            </div>
+                </div>
+            </div><!-- End resourcesContent -->
 
             <!-- Equipment & Combat Section -->
-            <div class="equipment-section">
+            <div class="section-header collapsed" id="equipmentHeader" onclick="app.toggleSection('equipment')">
                 <h2>⚔️ Equipment & Combat</h2>
+                <span class="section-toggle-icon">▼</span>
+            </div>
+            <div class="section-content collapsed" id="equipmentContent">
+                <div class="equipment-section" style="background: transparent; padding: 0; margin: 0; border-radius: 0;">
                 
                 <!-- Starting Kit Selection -->
                 <div style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid var(--primary-color);">
@@ -2310,9 +2386,16 @@
                 </div>
             </div>
 
+                </div>
+            </div><!-- End equipmentContent -->
+
             <!-- Injuries & Conditions Section -->
-            <div class="injuries-section" style="margin-top: 30px;">
+            <div class="section-header collapsed" id="injuriesHeader" onclick="app.toggleSection('injuries')">
                 <h2>🩹 Injuries & Conditions</h2>
+                <span class="section-toggle-icon">▼</span>
+            </div>
+            <div class="section-content collapsed" id="injuriesContent">
+                <div class="injuries-section" style="background: transparent; padding: 0; margin: 0; border-radius: 0;">
                 
                 <h3>Injuries</h3>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
@@ -2333,17 +2416,31 @@
                 <button onclick="app.addCondition()" style="margin-top: 10px;">+ Add Condition</button>
             </div>
 
+                </div>
+            </div><!-- End injuriesContent -->
+
             <!-- Connections Section -->
-            <div class="connections-section" style="margin-top: 30px;">
+            <div class="section-header collapsed" id="connectionsHeader" onclick="app.toggleSection('connections')">
                 <h2>🤝 Connections & Relationships</h2>
-                <div class="help-text">Track important NPCs, allies, enemies, and other relationships</div>
+                <span class="section-toggle-icon">▼</span>
+            </div>
+            <div class="section-content collapsed" id="connectionsContent">
+                <div class="connections-section" style="background: transparent; padding: 0; margin: 0; border-radius: 0;">
+                    <div class="help-text">Track important NPCs, allies, enemies, and other relationships</div>
                 <div id="connectionsList" class="connections-list"></div>
                 <button onclick="app.addConnection()" style="margin-top: 10px;">+ Add Connection</button>
             </div>
 
+                </div>
+            </div><!-- End connectionsContent -->
+
             <!-- Character Details Section -->
-            <div class="character-details-section" style="margin-top: 30px;">
+            <div class="section-header collapsed" id="characterDetailsHeader" onclick="app.toggleSection('characterDetails')">
                 <h2>👤 Character Details</h2>
+                <span class="section-toggle-icon">▼</span>
+            </div>
+            <div class="section-content collapsed" id="characterDetailsContent">
+                <div class="character-details-section" style="background: transparent; padding: 0; margin: 0; border-radius: 0;">
                 
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
                     <div class="input-group">
@@ -2377,9 +2474,17 @@
                 </div>
             </div>
 
-            <div class="paths-section">
-                <h2>Paths & Talents</h2>
-                <div class="help-text" style="margin-bottom: 15px;">Select your character's heroic paths and radiant order. Each path grants unique talents.</div>
+                </div>
+            </div><!-- End characterDetailsContent -->
+
+            <!-- Paths & Talents Section -->
+            <div class="section-header collapsed" id="pathsHeader" onclick="app.toggleSection('paths')">
+                <h2>⚔️ Paths & Talents</h2>
+                <span class="section-toggle-icon">▼</span>
+            </div>
+            <div class="section-content collapsed" id="pathsContent">
+                <div class="paths-section" style="background: transparent; padding: 0; margin: 0; border-radius: 0;">
+                    <div class="help-text" style="margin-bottom: 15px;">Select your character's heroic paths and radiant order. Each path grants unique talents.</div>
                 
                 <div id="pathsAndTalentsContainer"></div>
 
@@ -2422,17 +2527,35 @@
                 <div class="help-text">What stands in their way? What weakness or challenge must they overcome?</div>
             </div>
 
-            <div class="notes-section">
-                <h2>Goals</h2>
-                <p class="help-text" style="margin-bottom: 15px;">
-                    Goals represent tangible objectives your character is working toward. Each goal has 3 milestone checkboxes to track progress.
-                </p>
-                <div id="goalsList" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 15px;"></div>
-                <button onclick="app.addGoal()" style="margin-bottom: 20px;">+ Add Goal</button>
-                
-                <h2>Notes</h2>
-                <textarea class="notes-area" id="notes" placeholder="Additional notes..." onchange="app.updateCharacter()"></textarea>
+                </div>
+            </div><!-- End pathsContent -->
+
+            <!-- Goals Section -->
+            <div class="section-header collapsed" id="goalsHeader" onclick="app.toggleSection('goals')">
+                <h2>🎯 Goals</h2>
+                <span class="section-toggle-icon">▼</span>
             </div>
+            <div class="section-content collapsed" id="goalsContent">
+                <div class="notes-section" style="margin: 0;">
+                    <p class="help-text" style="margin-bottom: 15px;">
+                        Goals represent tangible objectives your character is working toward. Each goal has 3 milestone checkboxes to track progress.
+                    </p>
+                    <div id="goalsList" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 15px;"></div>
+                    <button onclick="app.addGoal()" style="margin-bottom: 20px;">+ Add Goal</button>
+                </div>
+            </div><!-- End goalsContent -->
+
+            <!-- Notes Section -->
+            <div class="section-header collapsed" id="notesHeader" onclick="app.toggleSection('notes')">
+                <h2>📝 Notes</h2>
+                <span class="section-toggle-icon">▼</span>
+            </div>
+            <div class="section-content collapsed" id="notesContent">
+                <div class="notes-section" style="margin: 0;">
+                    <textarea class="notes-area" id="notes" placeholder="Additional notes..." onchange="app.updateCharacter()"></textarea>
+                </div>
+            </div><!-- End notesContent -->
+
             </div><!-- End character-building -->
         </div><!-- End characterSheetSection -->
     </div><!-- End container -->
@@ -5041,18 +5164,22 @@
                 this.updateCharacter();
             },
 
-            toggleInventory: function() {
-                const content = document.getElementById('inventoryContent');
-                const icon = document.getElementById('inventoryToggleIcon');
+            // Universal section toggle function
+            toggleSection: function(sectionId) {
+                const header = document.getElementById(sectionId + 'Header');
+                const content = document.getElementById(sectionId + 'Content');
                 
-                if (content.style.display === 'none') {
-                    content.style.display = 'block';
-                    icon.textContent = '▼';
-                    icon.style.transform = 'rotate(0deg)';
+                if (!header || !content) {
+                    console.error(`Section ${sectionId} not found`);
+                    return;
+                }
+                
+                if (content.classList.contains('collapsed')) {
+                    content.classList.remove('collapsed');
+                    header.classList.remove('collapsed');
                 } else {
-                    content.style.display = 'none';
-                    icon.textContent = '▶';
-                    icon.style.transform = 'rotate(-90deg)';
+                    content.classList.add('collapsed');
+                    header.classList.add('collapsed');
                 }
             },
 
