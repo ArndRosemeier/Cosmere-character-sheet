@@ -3260,9 +3260,7 @@
                         presence: 2
                     },
                     skills: {},
-                    currentHealth: 12, // Base 10 + Str 2
-                    currentFocus: 7,   // Base 5 + Wil 2
-                    currentInvestiture: 0, // No Radiant path yet
+                    // Current resources will be set to max values after calculation
                     deflect: 0,
                     paths: [], // Multi-path system
                     talents: [],
@@ -3304,21 +3302,35 @@
 
                 this.characters.push(newChar);
                 this.loadCharacter(newChar.id);
-                
-                // Set current resources to match calculated max values for new character
-                if (this.currentCharacter) {
-                    this.currentCharacter.currentHealth = this.currentCharacter.maxHealth;
-                    this.currentCharacter.currentFocus = this.currentCharacter.maxFocus;
-                    this.currentCharacter.currentInvestiture = this.currentCharacter.maxInvestiture || 0;
-                    this.renderCharacterSheet(); // Re-render with corrected values
-                }
-                
                 this.saveToLocalStorage();
             },
 
             loadCharacter: function(charId) {
                 this.currentCharacter = this.characters.find(c => c.id === charId);
                 if (this.currentCharacter) {
+                    // Initialize current resources to max if undefined (new characters)
+                    const totalLevel = this.getTotalLevel();
+                    const hasRadiant = this.currentCharacter.paths && this.currentCharacter.paths.some(p => p.type === 'radiant' && p.level > 0);
+                    
+                    if (this.currentCharacter.currentHealth === undefined) {
+                        const maxHealth = this.rules.resources.health.baseValue + (totalLevel * this.rules.resources.health.perLevel);
+                        this.currentCharacter.currentHealth = maxHealth;
+                    }
+                    
+                    if (this.currentCharacter.currentFocus === undefined) {
+                        const maxFocus = this.rules.resources.focus.baseValue + (totalLevel * this.rules.resources.focus.perLevel);
+                        this.currentCharacter.currentFocus = maxFocus;
+                    }
+                    
+                    if (this.currentCharacter.currentInvestiture === undefined) {
+                        if (hasRadiant) {
+                            const maxInvestiture = this.rules.resources.investiture.baseValue + (totalLevel * this.rules.resources.investiture.perLevel);
+                            this.currentCharacter.currentInvestiture = maxInvestiture;
+                        } else {
+                            this.currentCharacter.currentInvestiture = 0;
+                        }
+                    }
+                    
                     this.renderCharacterSheet();
                     this.updatePointTrackers();
                     this.validateCharacter();
