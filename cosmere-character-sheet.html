@@ -834,13 +834,9 @@
             border-color: var(--primary-color) !important;
         }
 
-        /* Equipment & Combat Styles */
+        /* Equipment & Combat Styles - now handled by section-content wrapper */
         .equipment-section, .injuries-section, .connections-section, .character-details-section {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            /* Background and padding removed - unified collapsible sections now */
         }
 
         .items-list {
@@ -2283,7 +2279,7 @@
                 <span class="section-toggle-icon">▼</span>
             </div>
             <div class="section-content collapsed" id="equipmentContent">
-                <div class="equipment-section" style="background: transparent; padding: 0; margin: 0; border-radius: 0;">
+                <div class="equipment-section">
                 
                 <!-- Starting Kit Selection -->
                 <div style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid var(--primary-color);">
@@ -2395,7 +2391,7 @@
                 <span class="section-toggle-icon">▼</span>
             </div>
             <div class="section-content collapsed" id="injuriesContent">
-                <div class="injuries-section" style="background: transparent; padding: 0; margin: 0; border-radius: 0;">
+                <div class="injuries-section">
                 
                 <h3>Injuries</h3>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
@@ -2425,7 +2421,7 @@
                 <span class="section-toggle-icon">▼</span>
             </div>
             <div class="section-content collapsed" id="connectionsContent">
-                <div class="connections-section" style="background: transparent; padding: 0; margin: 0; border-radius: 0;">
+                <div class="connections-section">
                     <div class="help-text">Track important NPCs, allies, enemies, and other relationships</div>
                     <div id="connectionsList" class="connections-list"></div>
                     <button onclick="app.addConnection()" style="margin-top: 10px;">+ Add Connection</button>
@@ -2438,7 +2434,7 @@
                 <span class="section-toggle-icon">▼</span>
             </div>
             <div class="section-content collapsed" id="characterDetailsContent">
-                <div class="character-details-section" style="background: transparent; padding: 0; margin: 0; border-radius: 0;">
+                <div class="character-details-section">
                 
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
                     <div class="input-group">
@@ -2479,7 +2475,7 @@
                 <span class="section-toggle-icon">▼</span>
             </div>
             <div class="section-content collapsed" id="pathsContent">
-                <div class="paths-section" style="background: transparent; padding: 0; margin: 0; border-radius: 0;">
+                <div class="paths-section">
                     <div class="help-text" style="margin-bottom: 15px;">Select your character's heroic paths and radiant order. Each path grants unique talents.</div>
                 
                 <div id="pathsAndTalentsContainer"></div>
