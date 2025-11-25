@@ -2524,7 +2524,7 @@
             </div>
 
             <div style="max-height: 60vh; overflow-y: auto;">
-                <div id="conditionsList" class="weapon-selection-list"></div>
+                <div id="conditionSelectionList" class="weapon-selection-list"></div>
             </div>
         </div>
     </div>
@@ -5050,7 +5050,7 @@
             },
 
             renderConditionSelectionModal: function() {
-                const container = document.getElementById('conditionsList');
+                const container = document.getElementById('conditionSelectionList');
                 const conditions = this.rules.conditions || [];
                 
                 container.innerHTML = conditions.map(condition => `
@@ -5090,7 +5090,7 @@
             },
 
             filterConditions: function(searchTerm) {
-                const container = document.getElementById('conditionsList');
+                const container = document.getElementById('conditionSelectionList');
                 const conditions = this.rules.conditions || [];
                 const term = searchTerm.toLowerCase();
                 
