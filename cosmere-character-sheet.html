@@ -3226,13 +3226,16 @@
                     card.onclick = () => this.loadCharacter(char.id);
                     
                     // Calculate total level from paths
-                    const charLevel = char.paths ? char.paths.reduce((sum, path) => sum + (path.level || 0), 0) : 0;
+                    const charLevel = char.paths ? char.paths.reduce((sum, path) => {
+                        if (path.level === undefined) throw new Error(`Path has undefined level in character ${char.id}`);
+                        return sum + path.level;
+                    }, 0) : 0;
                     
                     // Build paths display
                     let pathsDisplay = 'No Paths';
                     if (char.paths && char.paths.length > 0) {
                         pathsDisplay = char.paths
-                            .filter(p => (p.level || 0) > 0)
+                            .filter(p => p.level > 0)
                             .map(p => {
                                 const pathData = p.type === 'heroic' 
                                     ? this.rules.heroicPaths.find(hp => hp.id === p.id)
@@ -3380,8 +3383,10 @@
                 const skills = this.rules.skills.list.filter(s => s.category === category);
                 
                 container.innerHTML = skills.map(skill => {
-                    const rank = this.currentCharacter.skills[skill.id] || 0;
-                    const attr = this.currentCharacter.attributes[skill.attribute] || 0;
+                    const rank = this.currentCharacter.skills[skill.id];
+                    const attr = this.currentCharacter.attributes[skill.attribute];
+                    if (rank === undefined) throw new Error(`Skill ${skill.id} is undefined`);
+                    if (attr === undefined) throw new Error(`Attribute ${skill.attribute} is undefined`);
                     const modifier = attr + rank;
                     
                     return `
@@ -3512,9 +3517,10 @@
                     const surgeData = this.rules.surges[surgeId];
                     if (!surgeData) return;
                     
-                    const currentRank = this.currentCharacter.surgeRanks[surgeId] || 0;
+                    const currentRank = this.currentCharacter.surgeRanks[surgeId] ?? 0; // 0 is valid for unleveled
                     const attribute = this.rules.attributes.list.find(a => a.id === surgeData.attribute);
-                    const attributeValue = this.currentCharacter.attributes[surgeData.attribute] || 0;
+                    const attributeValue = this.currentCharacter.attributes[surgeData.attribute];
+                    if (attributeValue === undefined) throw new Error(`Attribute ${surgeData.attribute} is undefined`);
                     const surgeModifier = attributeValue + currentRank;
                     
                     html += `
@@ -3605,7 +3611,7 @@
                     this.currentCharacter.surgeRanks = {};
                 }
                 
-                const currentRank = this.currentCharacter.surgeRanks[surgeId] || 0;
+                const currentRank = this.currentCharacter.surgeRanks[surgeId] ?? 0; // 0 is valid for unleveled
                 const newRank = Math.max(0, Math.min(5, currentRank + delta));
                 
                 this.currentCharacter.surgeRanks[surgeId] = newRank;
@@ -3837,7 +3843,8 @@
                 const path = this.currentCharacter.paths[pathIndex];
                 if (!path) return;
                 
-                const newLevel = (path.level || 0) + delta;
+                if (path.level === undefined) throw new Error(`Path ${pathId} has undefined level`);
+                const newLevel = path.level + delta;
                 if (newLevel < 0 || newLevel > 10) return;
                 
                 path.level = newLevel;
@@ -3849,7 +3856,10 @@
 
             getTotalLevel: function() {
                 if (!this.currentCharacter.paths) return 0;
-                const total = this.currentCharacter.paths.reduce((sum, path) => sum + (path.level || 0), 0);
+                const total = this.currentCharacter.paths.reduce((sum, path) => {
+                    if (path.level === undefined) throw new Error(`Path ${path.id} has undefined level`);
+                    return sum + path.level;
+                }, 0);
                 return total;
             },
 
@@ -4628,10 +4638,14 @@
                 }
 
                 container.innerHTML = this.currentCharacter.weapons.map((weapon, index) => {
-                    const skillName = this.rules.skills.list.find(s => s.id === weapon.skill)?.name || weapon.skill;
-                    const skillRank = this.currentCharacter.skills[weapon.skill] || 0;
-                    const attr = this.rules.skills.list.find(s => s.id === weapon.skill)?.attribute || 'strength';
-                    const attrValue = this.currentCharacter.attributes[attr] || 0;
+                    const skillData = this.rules.skills.list.find(s => s.id === weapon.skill);
+                    if (!skillData) throw new Error(`Weapon skill ${weapon.skill} not found in rules`);
+                    const skillName = skillData.name;
+                    const skillRank = this.currentCharacter.skills[weapon.skill];
+                    if (skillRank === undefined) throw new Error(`Skill rank for ${weapon.skill} is undefined`);
+                    const attr = skillData.attribute;
+                    const attrValue = this.currentCharacter.attributes[attr];
+                    if (attrValue === undefined) throw new Error(`Attribute ${attr} is undefined`);
                     const attackBonus = attrValue + skillRank;
                     
                     return `
@@ -4888,10 +4902,13 @@
 
             calculateAttackBonuses: function() {
                 // Melee attack = STR or SPD + Light/Heavy Weaponry skill
-                const str = this.currentCharacter.attributes.strength || 0;
-                const spd = this.currentCharacter.attributes.speed || 0;
-                const lightWeap = this.currentCharacter.skills.light_weaponry || 0;
-                const heavyWeap = this.currentCharacter.skills.heavy_weaponry || 0;
+                const str = this.currentCharacter.attributes.strength;
+                const spd = this.currentCharacter.attributes.speed;
+                const lightWeap = this.currentCharacter.skills.light_weaponry;
+                const heavyWeap = this.currentCharacter.skills.heavy_weaponry;
+                if (str === undefined || spd === undefined || lightWeap === undefined || heavyWeap === undefined) {
+                    throw new Error('Required attributes or skills undefined in calculateAttackBonuses');
+                }
                 
                 const meleeBonus = Math.max(str + lightWeap, str + heavyWeap, spd + lightWeap);
                 const rangedBonus = Math.max(spd + lightWeap, str + heavyWeap);
@@ -4901,8 +4918,11 @@
             },
 
             calculateInitiative: function() {
-                const awa = this.currentCharacter.attributes.awareness || 0;
-                const spd = this.currentCharacter.attributes.speed || 0;
+                const awa = this.currentCharacter.attributes.awareness;
+                const spd = this.currentCharacter.attributes.speed;
+                if (awa === undefined || spd === undefined) {
+                    throw new Error('Awareness or Speed undefined in calculateInitiative');
+                }
                 const initiative = awa + spd;
                 document.getElementById('initiative').textContent = `+${initiative}`;
             },
@@ -5022,8 +5042,8 @@
 
                 let totalWeight = 0;
                 container.innerHTML = this.currentCharacter.inventory.map((item, index) => {
-                    const itemWeight = item.weight || 0; // Default to 0 if weight is missing
-                    const itemQuantity = item.quantity || 1; // Default to 1 if quantity is missing
+                    const itemWeight = item.weight ?? 0; // Some items legitimately have no weight
+                    const itemQuantity = item.quantity ?? 1; // Default quantity is 1
                     totalWeight += itemWeight * itemQuantity;
                     return `
                         <div class="item-card">
@@ -5368,17 +5388,17 @@
                 const char = this.currentCharacter;
                 
                 // Update attributes
-                document.getElementById('playStrength').textContent = char.attributes.strength || 0;
-                document.getElementById('playSpeed').textContent = char.attributes.speed || 0;
-                document.getElementById('playIntellect').textContent = char.attributes.intellect || 0;
-                document.getElementById('playWillpower').textContent = char.attributes.willpower || 0;
-                document.getElementById('playAwareness').textContent = char.attributes.awareness || 0;
-                document.getElementById('playPresence').textContent = char.attributes.presence || 0;
+                document.getElementById('playStrength').textContent = char.attributes.strength;
+                document.getElementById('playSpeed').textContent = char.attributes.speed;
+                document.getElementById('playIntellect').textContent = char.attributes.intellect;
+                document.getElementById('playWillpower').textContent = char.attributes.willpower;
+                document.getElementById('playAwareness').textContent = char.attributes.awareness;
+                document.getElementById('playPresence').textContent = char.attributes.presence;
                 
                 // Update defenses
-                document.getElementById('playPhysicalDefense').textContent = char.physicalDefense || 10;
-                document.getElementById('playCognitiveDefense').textContent = char.cognitiveDefense || 10;
-                document.getElementById('playSpiritualDefense').textContent = char.spiritualDefense || 10;
+                document.getElementById('playPhysicalDefense').textContent = char.physicalDefense;
+                document.getElementById('playCognitiveDefense').textContent = char.cognitiveDefense;
+                document.getElementById('playSpiritualDefense').textContent = char.spiritualDefense;
                 
                 // Update combat stats
                 const initiativeElem = document.getElementById('initiative');
@@ -5390,17 +5410,17 @@
                 document.getElementById('playRangedAttack').textContent = rangedElem ? rangedElem.textContent : '+0';
                 
                 // Update resources
-                document.getElementById('playMaxHealth').textContent = char.maxHealth || 10;
-                document.getElementById('playMaxFocus').textContent = char.maxFocus || 5;
-                document.getElementById('playMaxInvestiture').textContent = char.maxInvestiture || 0;
-                document.getElementById('playDeflect').textContent = char.deflect || 0;
-                document.getElementById('playRecoveryDie').textContent = char.recoveryDie || '1d6';
-                document.getElementById('playMovement').textContent = char.movement || '30 ft';
+                document.getElementById('playMaxHealth').textContent = char.maxHealth;
+                document.getElementById('playMaxFocus').textContent = char.maxFocus;
+                document.getElementById('playMaxInvestiture').textContent = char.maxInvestiture;
+                document.getElementById('playDeflect').textContent = char.deflect;
+                document.getElementById('playRecoveryDie').textContent = char.recoveryDie;
+                document.getElementById('playMovement').textContent = char.movement;
                 
                 // Sync current values
-                document.getElementById('playCurrentHealth').value = char.currentHealth || char.maxHealth || 10;
-                document.getElementById('playCurrentFocus').value = char.currentFocus || char.maxFocus || 5;
-                document.getElementById('playCurrentInvestiture').value = char.currentInvestiture || char.maxInvestiture || 0;
+                document.getElementById('playCurrentHealth').value = char.currentHealth;
+                document.getElementById('playCurrentFocus').value = char.currentFocus;
+                document.getElementById('playCurrentInvestiture').value = char.currentInvestiture;
                 
                 // Update skills list
                 this.renderPlaySkills();
@@ -5433,8 +5453,10 @@
                     <div class="play-card">
                         <div class="play-card-header">${category}</div>
                         ${skills.map(skill => {
-                            const rank = this.currentCharacter.skills[skill.id] || 0;
-                            const attr = this.currentCharacter.attributes[skill.attribute] || 0;
+                            const rank = this.currentCharacter.skills[skill.id];
+                            const attr = this.currentCharacter.attributes[skill.attribute];
+                            if (rank === undefined) throw new Error(`Skill ${skill.id} is undefined`);
+                            if (attr === undefined) throw new Error(`Attribute ${skill.attribute} is undefined`);
                             const modifier = attr + rank;
                             return `
                                 <div class="play-stat-row">
@@ -5463,9 +5485,13 @@
                 }
                 
                 container.innerHTML = this.currentCharacter.weapons.map(weapon => {
-                    const skillRank = this.currentCharacter.skills[weapon.skill] || 0;
-                    const attr = this.rules.skills.list.find(s => s.id === weapon.skill)?.attribute || 'strength';
-                    const attrValue = this.currentCharacter.attributes[attr] || 0;
+                    const skillData = this.rules.skills.list.find(s => s.id === weapon.skill);
+                    if (!skillData) throw new Error(`Weapon skill ${weapon.skill} not found in rules`);
+                    const skillRank = this.currentCharacter.skills[weapon.skill];
+                    if (skillRank === undefined) throw new Error(`Skill rank for ${weapon.skill} is undefined`);
+                    const attr = skillData.attribute;
+                    const attrValue = this.currentCharacter.attributes[attr];
+                    if (attrValue === undefined) throw new Error(`Attribute ${attr} is undefined`);
                     const attackBonus = attrValue + skillRank;
                     
                     return `
