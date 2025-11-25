@@ -1335,6 +1335,257 @@
                 font-size: 0.8em;
             }
         }
+
+        /* ===== COMBAT & PLAY SECTION (Tablet Optimized) ===== */
+        .combat-play-section {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 3px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .combat-play-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            padding: 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .combat-play-header:hover {
+            background: rgba(255,255,255,0.08);
+        }
+
+        .combat-play-header h2 {
+            margin: 0;
+            color: var(--accent-color);
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .collapse-indicator {
+            font-size: 1.2em;
+            transition: transform 0.3s;
+            color: var(--accent-color);
+        }
+
+        .combat-play-header.collapsed .collapse-indicator {
+            transform: rotate(-90deg);
+        }
+
+        .combat-play-content {
+            max-height: 5000px;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, opacity 0.3s;
+            opacity: 1;
+        }
+
+        .combat-play-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+
+        /* Compact Grid Layout for Tablet */
+        .play-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .play-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .play-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .play-card {
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(68,138,255,0.3);
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .play-card-header {
+            font-weight: bold;
+            font-size: 0.95em;
+            margin-bottom: 10px;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .play-stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 4px;
+            margin-bottom: 6px;
+            min-height: 44px; /* Tablet touch target */
+        }
+
+        .play-stat-label {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+        }
+
+        .play-stat-value {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        /* Touch-friendly dice buttons */
+        .play-dice-btn {
+            min-width: 44px;
+            min-height: 44px;
+            font-size: 1.3em;
+            background: var(--accent-color);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-center: center;
+            padding: 0;
+        }
+
+        .play-dice-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+
+        .play-dice-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Collapsible Section */
+        .collapsible-section {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(68,138,255,0.2);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .collapsible-header {
+            padding: 12px 15px;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.05);
+            transition: background 0.2s;
+        }
+
+        .collapsible-header:hover {
+            background: rgba(255,255,255,0.08);
+        }
+
+        .collapsible-header h3 {
+            margin: 0;
+            font-size: 1.1em;
+            color: var(--accent-color);
+        }
+
+        .collapsible-content {
+            max-height: 3000px;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            padding: 15px;
+        }
+
+        .collapsible-content.collapsed {
+            max-height: 0;
+            padding: 0 15px;
+        }
+
+        /* Action List */
+        .action-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .action-item {
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 6px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .action-item.reaction {
+            border-left-color: var(--secondary-color);
+        }
+
+        .action-item.free {
+            border-left-color: var(--success-color);
+        }
+
+        .action-name {
+            font-weight: bold;
+            font-size: 1.05em;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-cost {
+            font-size: 0.85em;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .action-description {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* Tablet Optimizations */
+        @media (max-width: 1024px) {
+            .combat-play-section {
+                padding: 12px;
+            }
+            
+            button, .play-dice-btn {
+                min-width: 48px;
+                min-height: 48px;
+            }
+            
+            .play-stat-row {
+                min-height: 48px;
+            }
+        }
+
+        /* Character Building section (separate from play) */
+        .character-building {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 3px solid var(--border-color);
+        }
     </style>
 </head>
 <body>
@@ -1372,6 +1623,317 @@
 
             <div id="validationSummary" class="validation-summary"></div>
 
+            <!-- ===== COMBAT & PLAY SECTION (Optimized for Tablets) ===== -->
+            <div class="combat-play-section" id="combatPlaySection">
+                <div class="combat-play-header" onclick="app.toggleCombatPlay()">
+                    <h2>⚔️ Combat & Play</h2>
+                    <span class="collapse-indicator">▼</span>
+                </div>
+                
+                <div class="combat-play-content" id="combatPlayContent">
+                    <!-- Quick Stats Grid -->
+                    <div class="play-grid">
+                        <!-- Attributes Card -->
+                        <div class="play-card">
+                            <div class="play-card-header">⚡ Attributes</div>
+                            <div class="play-stat-row">
+                                <span class="play-stat-label">STR</span>
+                                <span class="play-stat-value">
+                                    <span id="playStrength">2</span>
+                                    <button class="play-dice-btn" onclick="diceRoller.rollAttribute('strength', document.getElementById('strength').value)" title="Roll Strength test">🎲</button>
+                                </span>
+                            </div>
+                            <div class="play-stat-row">
+                                <span class="play-stat-label">SPD</span>
+                                <span class="play-stat-value">
+                                    <span id="playSpeed">2</span>
+                                    <button class="play-dice-btn" onclick="diceRoller.rollAttribute('speed', document.getElementById('speed').value)" title="Roll Speed test">🎲</button>
+                                </span>
+                            </div>
+                            <div class="play-stat-row">
+                                <span class="play-stat-label">INT</span>
+                                <span class="play-stat-value">
+                                    <span id="playIntellect">2</span>
+                                    <button class="play-dice-btn" onclick="diceRoller.rollAttribute('intellect', document.getElementById('intellect').value)" title="Roll Intellect test">🎲</button>
+                                </span>
+                            </div>
+                            <div class="play-stat-row">
+                                <span class="play-stat-label">WIL</span>
+                                <span class="play-stat-value">
+                                    <span id="playWillpower">2</span>
+                                    <button class="play-dice-btn" onclick="diceRoller.rollAttribute('willpower', document.getElementById('willpower').value)" title="Roll Willpower test">🎲</button>
+                                </span>
+                            </div>
+                            <div class="play-stat-row">
+                                <span class="play-stat-label">AWR</span>
+                                <span class="play-stat-value">
+                                    <span id="playAwareness">2</span>
+                                    <button class="play-dice-btn" onclick="diceRoller.rollAttribute('awareness', document.getElementById('awareness').value)" title="Roll Awareness test">🎲</button>
+                                </span>
+                            </div>
+                            <div class="play-stat-row">
+                                <span class="play-stat-label">PRE</span>
+                                <span class="play-stat-value">
+                                    <span id="playPresence">2</span>
+                                    <button class="play-dice-btn" onclick="diceRoller.rollAttribute('presence', document.getElementById('presence').value)" title="Roll Presence test">🎲</button>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Defenses & Combat Stats Card -->
+                        <div class="play-card">
+                            <div class="play-card-header">🛡️ Defenses & Combat</div>
+                            <div class="play-stat-row">
+                                <span class="play-stat-label">Physical Def</span>
+                                <span class="play-stat-value">
+                                    <span id="playPhysicalDefense">14</span>
+                                    <button class="play-dice-btn" onclick="diceRoller.rollDefense('Physical Defense', document.getElementById('physicalDefense').textContent)" title="Roll">🎲</button>
+                                </span>
+                            </div>
+                            <div class="play-stat-row">
+                                <span class="play-stat-label">Cognitive Def</span>
+                                <span class="play-stat-value">
+                                    <span id="playCognitiveDefense">14</span>
+                                    <button class="play-dice-btn" onclick="diceRoller.rollDefense('Cognitive Defense', document.getElementById('cognitiveDefense').textContent)" title="Roll">🎲</button>
+                                </span>
+                            </div>
+                            <div class="play-stat-row">
+                                <span class="play-stat-label">Spiritual Def</span>
+                                <span class="play-stat-value">
+                                    <span id="playSpiritualDefense">14</span>
+                                    <button class="play-dice-btn" onclick="diceRoller.rollDefense('Spiritual Defense', document.getElementById('spiritualDefense').textContent)" title="Roll">🎲</button>
+                                </span>
+                            </div>
+                            <div class="play-stat-row">
+                                <span class="play-stat-label">Initiative</span>
+                                <span class="play-stat-value">
+                                    <span id="playInitiative">+2</span>
+                                    <button class="play-dice-btn" onclick="diceRoller.rollInitiative(document.getElementById('initiative').textContent)" title="Roll Initiative">🎲</button>
+                                </span>
+                            </div>
+                            <div class="play-stat-row">
+                                <span class="play-stat-label">Melee Attack</span>
+                                <span class="play-stat-value">
+                                    <span id="playMeleeAttack">+4</span>
+                                    <button class="play-dice-btn" onclick="diceRoller.rollAttack('Melee', document.getElementById('meleeAttack').textContent)" title="Roll Melee Attack">🎲</button>
+                                </span>
+                            </div>
+                            <div class="play-stat-row">
+                                <span class="play-stat-label">Ranged Attack</span>
+                                <span class="play-stat-value">
+                                    <span id="playRangedAttack">+4</span>
+                                    <button class="play-dice-btn" onclick="diceRoller.rollAttack('Ranged', document.getElementById('rangedAttack').textContent)" title="Roll Ranged Attack">🎲</button>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Resources Card -->
+                        <div class="play-card">
+                            <div class="play-card-header">💎 Resources</div>
+                            <div class="play-stat-row">
+                                <span class="play-stat-label">Health</span>
+                                <span class="play-stat-value">
+                                    <input type="number" id="playCurrentHealth" min="0" style="width: 50px; text-align: center; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); border-radius: 4px; color: white; padding: 4px;" onchange="document.getElementById('currentHealth').value = this.value; app.updateCharacter()">
+                                    <span>/</span>
+                                    <span id="playMaxHealth">16</span>
+                                </span>
+                            </div>
+                            <div class="play-stat-row">
+                                <span class="play-stat-label">Focus</span>
+                                <span class="play-stat-value">
+                                    <input type="number" id="playCurrentFocus" min="0" style="width: 50px; text-align: center; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); border-radius: 4px; color: white; padding: 4px;" onchange="document.getElementById('currentFocus').value = this.value; app.updateCharacter()">
+                                    <span>/</span>
+                                    <span id="playMaxFocus">8</span>
+                                </span>
+                            </div>
+                            <div class="play-stat-row">
+                                <span class="play-stat-label">Investiture</span>
+                                <span class="play-stat-value">
+                                    <input type="number" id="playCurrentInvestiture" min="0" style="width: 50px; text-align: center; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); border-radius: 4px; color: white; padding: 4px;" onchange="document.getElementById('currentInvestiture').value = this.value; app.updateCharacter()">
+                                    <span>/</span>
+                                    <span id="playMaxInvestiture">4</span>
+                                </span>
+                            </div>
+                            <div class="play-stat-row">
+                                <span class="play-stat-label">Deflect</span>
+                                <span class="play-stat-value" id="playDeflect">0</span>
+                            </div>
+                            <div class="play-stat-row">
+                                <span class="play-stat-label">Recovery Die</span>
+                                <span class="play-stat-value">
+                                    <span id="playRecoveryDie">1d6</span>
+                                    <button class="play-dice-btn" onclick="diceRoller.rollRecovery(document.getElementById('recoveryDie').textContent)" title="Roll Recovery Die">🎲</button>
+                                </span>
+                            </div>
+                            <div class="play-stat-row">
+                                <span class="play-stat-label">Movement</span>
+                                <span class="play-stat-value" id="playMovement">40 ft</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Collapsible Skills Section -->
+                    <div class="collapsible-section" style="margin-top: 15px;">
+                        <div class="collapsible-header" onclick="app.toggleSection('playSkills')">
+                            <h3>📚 Skills</h3>
+                            <span class="collapse-indicator" id="playSkillsIndicator">▼</span>
+                        </div>
+                        <div class="collapsible-content" id="playSkillsContent">
+                            <div id="playSkillsList"></div>
+                        </div>
+                    </div>
+
+                    <!-- Collapsible Weapons Section -->
+                    <div class="collapsible-section">
+                        <div class="collapsible-header" onclick="app.toggleSection('playWeapons')">
+                            <h3>⚔️ Weapons</h3>
+                            <span class="collapse-indicator" id="playWeaponsIndicator">▼</span>
+                        </div>
+                        <div class="collapsible-content" id="playWeaponsContent">
+                            <div id="playWeaponsList"></div>
+                        </div>
+                    </div>
+
+                    <!-- Collapsible Actions Section -->
+                    <div class="collapsible-section">
+                        <div class="collapsible-header" onclick="app.toggleSection('playActions')">
+                            <h3>🎯 Combat Actions</h3>
+                            <span class="collapse-indicator" id="playActionsIndicator">▼</span>
+                        </div>
+                        <div class="collapsible-content" id="playActionsContent">
+                            <div class="action-list">
+                                <!-- Actions (1-3 actions) -->
+                                <div class="action-item">
+                                    <div class="action-name">
+                                        <span class="action-cost">●</span>
+                                        Strike
+                                    </div>
+                                    <div class="action-description">Attack with unarmed or wielded weapon. Can use once per hand per turn (offhand costs 2 focus).</div>
+                                </div>
+                                <div class="action-item">
+                                    <div class="action-name">
+                                        <span class="action-cost">●</span>
+                                        Move
+                                    </div>
+                                    <div class="action-description">Move up to your movement rate. Slowed if crawling, climbing, swimming, or being stealthy.</div>
+                                </div>
+                                <div class="action-item">
+                                    <div class="action-name">
+                                        <span class="action-cost">●</span>
+                                        Interact
+                                    </div>
+                                    <div class="action-description">Open door, pick up item, draw/sheathe weapon, pass item to ally, etc. No skill test usually required.</div>
+                                </div>
+                                <div class="action-item">
+                                    <div class="action-name">
+                                        <span class="action-cost">●</span>
+                                        Use a Skill
+                                    </div>
+                                    <div class="action-description">Use any skill for challenging tasks: Perception to search, Stealth to hide, Medicine to treat, etc.</div>
+                                </div>
+                                <div class="action-item">
+                                    <div class="action-name">
+                                        <span class="action-cost">●</span>
+                                        Brace
+                                    </div>
+                                    <div class="action-description">Hide behind cover within 5 ft. Attacks against you gain disadvantage until you move or attack.</div>
+                                </div>
+                                <div class="action-item">
+                                    <div class="action-name">
+                                        <span class="action-cost">●</span>
+                                        Disengage
+                                    </div>
+                                    <div class="action-description">Move 5 feet without triggering Reactive Strikes.</div>
+                                </div>
+                                <div class="action-item">
+                                    <div class="action-name">
+                                        <span class="action-cost">●</span>
+                                        Gain Advantage
+                                    </div>
+                                    <div class="action-description">Make a skill test against enemy's defense. On success, gain advantage on your next test using a different skill.</div>
+                                </div>
+                                <div class="action-item">
+                                    <div class="action-name">
+                                        <span class="action-cost">●</span>
+                                        Shove
+                                    </div>
+                                    <div class="action-description">Athletics test vs target's Physical defense. On success, push or pull them 5 feet horizontally.</div>
+                                </div>
+                                <div class="action-item">
+                                    <div class="action-name">
+                                        <span class="action-cost">●</span>
+                                        Grapple
+                                    </div>
+                                    <div class="action-description">Athletics test vs target's Physical defense. On success, they're Restrained until you're Unconscious, you release them, or they escape your reach.</div>
+                                </div>
+                                <div class="action-item">
+                                    <div class="action-name">
+                                        <span class="action-cost">● +varies</span>
+                                        Ready
+                                    </div>
+                                    <div class="action-description">Prepare an action for a trigger. Costs the Ready action plus the action you're preparing.</div>
+                                </div>
+                                <div class="action-item">
+                                    <div class="action-name">
+                                        <span class="action-cost">●●</span>
+                                        Recover
+                                    </div>
+                                    <div class="action-description">Roll your recovery die to restore health and/or focus. Can only use once per scene.</div>
+                                </div>
+                                
+                                <!-- Free Actions -->
+                                <div class="action-item free">
+                                    <div class="action-name">
+                                        <span class="action-cost">FREE</span>
+                                        Banter
+                                    </div>
+                                    <div class="action-description">Speak briefly (couple sentences). For longer speech or persuasion, use Use a Skill.</div>
+                                </div>
+                                <div class="action-item free">
+                                    <div class="action-name">
+                                        <span class="action-cost">FREE</span>
+                                        Drop
+                                    </div>
+                                    <div class="action-description">Drop any number of objects you're holding.</div>
+                                </div>
+                                
+                                <!-- Reactions -->
+                                <div class="action-item reaction">
+                                    <div class="action-name">
+                                        <span class="action-cost">⚡ REACTION</span>
+                                        Aid
+                                    </div>
+                                    <div class="action-description">Spend 1 focus to grant an ally advantage on their test. Must be in range to assist.</div>
+                                </div>
+                                <div class="action-item reaction">
+                                    <div class="action-name">
+                                        <span class="action-cost">⚡ REACTION</span>
+                                        Avoid Danger
+                                    </div>
+                                    <div class="action-description">Agility test to dodge environmental hazard (falling boulder, shove, etc). DC 15 or attacker's test result.</div>
+                                </div>
+                                <div class="action-item reaction">
+                                    <div class="action-name">
+                                        <span class="action-cost">⚡ REACTION</span>
+                                        Dodge
+                                    </div>
+                                    <div class="action-description">Spend 1 focus to add disadvantage to an enemy's attack test against you. Can't use on area attacks.</div>
+                                </div>
+                                <div class="action-item reaction">
+                                    <div class="action-name">
+                                        <span class="action-cost">⚡ REACTION</span>
+                                        Reactive Strike
+                                    </div>
+                                    <div class="action-description">When enemy leaves your reach, spend 1 focus to make a melee weapon attack. Doesn't work on teleportation.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== CHARACTER BUILDING SECTION ===== -->
+            <div class="character-building">
             <div class="point-tracker">
                 <div class="point-tracker-header">
                     <div class="point-tracker-title">Attribute Points</div>
@@ -1865,8 +2427,9 @@
                 <h2>Notes</h2>
                 <textarea class="notes-area" id="notes" placeholder="Additional notes..." onchange="app.updateCharacter()"></textarea>
             </div>
-        </div>
-    </div>
+            </div><!-- End character-building -->
+        </div><!-- End characterSheetSection -->
+    </div><!-- End container -->
 
     <input type="file" id="fileInput" accept=".json" style="display: none;" onchange="app.handleFileImport(event)">
 
@@ -2763,8 +3326,9 @@
                     pathLevelsDisplay.textContent = 'No paths selected';
                 }
                 
-                // Recalculate all derived values
+                // Recalculate all derived values                
                 this.recalculateAll();
+                this.updateCombatPlayDisplay();
             },
 
             renderSkills: function(category) {
@@ -3357,6 +3921,7 @@
                 // Update point trackers and validation
                 this.updatePointTrackers();
                 this.validateCharacter();
+                this.updateCombatPlayDisplay();
             },
 
             updatePointTrackers: function() {
@@ -4654,6 +5219,152 @@
                         </div>
                     </div>
                 `).join('');
+            },
+
+            // Toggle Combat & Play section
+            toggleCombatPlay: function() {
+                const header = document.querySelector('.combat-play-header');
+                const content = document.getElementById('combatPlayContent');
+                header.classList.toggle('collapsed');
+                content.classList.toggle('collapsed');
+            },
+
+            // Toggle collapsible sections within Combat & Play
+            toggleSection: function(sectionId) {
+                const content = document.getElementById(sectionId + 'Content');
+                const indicator = document.getElementById(sectionId + 'Indicator');
+                
+                if (content.classList.contains('collapsed')) {
+                    content.classList.remove('collapsed');
+                    indicator.textContent = '▼';
+                } else {
+                    content.classList.add('collapsed');
+                    indicator.textContent = '▶';
+                }
+            },
+
+            // Update Combat & Play display values
+            updateCombatPlayDisplay: function() {
+                if (!this.currentCharacter) return;
+                
+                const char = this.currentCharacter;
+                
+                // Update attributes
+                document.getElementById('playStrength').textContent = char.attributes.strength || 0;
+                document.getElementById('playSpeed').textContent = char.attributes.speed || 0;
+                document.getElementById('playIntellect').textContent = char.attributes.intellect || 0;
+                document.getElementById('playWillpower').textContent = char.attributes.willpower || 0;
+                document.getElementById('playAwareness').textContent = char.attributes.awareness || 0;
+                document.getElementById('playPresence').textContent = char.attributes.presence || 0;
+                
+                // Update defenses
+                document.getElementById('playPhysicalDefense').textContent = char.physicalDefense || 10;
+                document.getElementById('playCognitiveDefense').textContent = char.cognitiveDefense || 10;
+                document.getElementById('playSpiritualDefense').textContent = char.spiritualDefense || 10;
+                
+                // Update combat stats
+                const initiativeElem = document.getElementById('initiative');
+                const meleeElem = document.getElementById('meleeAttack');
+                const rangedElem = document.getElementById('rangedAttack');
+                
+                document.getElementById('playInitiative').textContent = initiativeElem ? initiativeElem.textContent : '+0';
+                document.getElementById('playMeleeAttack').textContent = meleeElem ? meleeElem.textContent : '+0';
+                document.getElementById('playRangedAttack').textContent = rangedElem ? rangedElem.textContent : '+0';
+                
+                // Update resources
+                document.getElementById('playMaxHealth').textContent = char.maxHealth || 10;
+                document.getElementById('playMaxFocus').textContent = char.maxFocus || 5;
+                document.getElementById('playMaxInvestiture').textContent = char.maxInvestiture || 0;
+                document.getElementById('playDeflect').textContent = char.deflect || 0;
+                document.getElementById('playRecoveryDie').textContent = char.recoveryDie || '1d6';
+                document.getElementById('playMovement').textContent = char.movement || '30 ft';
+                
+                // Sync current values
+                document.getElementById('playCurrentHealth').value = char.currentHealth || char.maxHealth || 10;
+                document.getElementById('playCurrentFocus').value = char.currentFocus || char.maxFocus || 5;
+                document.getElementById('playCurrentInvestiture').value = char.currentInvestiture || char.maxInvestiture || 0;
+                
+                // Update skills list
+                this.renderPlaySkills();
+                
+                // Update weapons list
+                this.renderPlayWeapons();
+            },
+
+            // Render skills for Combat & Play section
+            renderPlaySkills: function() {
+                const container = document.getElementById('playSkillsList');
+                if (!container || !this.currentCharacter) return;
+                
+                const allSkills = this.rules.skills.list || [];
+                const physicalSkills = allSkills.filter(s => s.category === 'physical');
+                const cognitiveSkills = allSkills.filter(s => s.category === 'cognitive');
+                const spiritualSkills = allSkills.filter(s => s.category === 'spiritual');
+                
+                container.innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+                        ${this.renderPlaySkillCategory('Physical', physicalSkills)}
+                        ${this.renderPlaySkillCategory('Cognitive', cognitiveSkills)}
+                        ${this.renderPlaySkillCategory('Spiritual', spiritualSkills)}
+                    </div>
+                `;
+            },
+
+            renderPlaySkillCategory: function(category, skills) {
+                return `
+                    <div class="play-card">
+                        <div class="play-card-header">${category}</div>
+                        ${skills.map(skill => {
+                            const rank = this.currentCharacter.skills[skill.id] || 0;
+                            const attr = this.currentCharacter.attributes[skill.attribute] || 0;
+                            const modifier = attr + rank;
+                            return `
+                                <div class="play-stat-row">
+                                    <span class="play-stat-label">${skill.name}</span>
+                                    <span class="play-stat-value">
+                                        <span>+${modifier}</span>
+                                        <button class="play-dice-btn" 
+                                                onclick="diceRoller.rollInline('1d20+${modifier}', '${skill.name} Test')"
+                                                title="Roll ${skill.name} test">🎲</button>
+                                    </span>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            },
+
+            // Render weapons for Combat & Play section
+            renderPlayWeapons: function() {
+                const container = document.getElementById('playWeaponsList');
+                if (!container || !this.currentCharacter) return;
+                
+                if (!this.currentCharacter.weapons || this.currentCharacter.weapons.length === 0) {
+                    container.innerHTML = '<div class="help-text">No weapons equipped.</div>';
+                    return;
+                }
+                
+                container.innerHTML = this.currentCharacter.weapons.map(weapon => {
+                    const skillRank = this.currentCharacter.skills[weapon.skill] || 0;
+                    const attr = this.rules.skills.list.find(s => s.id === weapon.skill)?.attribute || 'strength';
+                    const attrValue = this.currentCharacter.attributes[attr] || 0;
+                    const attackBonus = attrValue + skillRank;
+                    
+                    return `
+                        <div class="play-stat-row" style="flex-wrap: wrap;">
+                            <span class="play-stat-label" style="flex: 1; min-width: 150px;">
+                                <strong>${weapon.name}</strong><br>
+                                <span style="font-size: 0.85em; color: #999;">${weapon.damage} ${weapon.damageType} | ${weapon.range}</span>
+                            </span>
+                            <span class="play-stat-value">
+                                <span>+${attackBonus}</span>
+                                <button class="play-dice-btn" 
+                                        onclick="diceRoller.rollWeaponAttack(\`${weapon.name}\`, ${attackBonus}, \`${weapon.damage}\`)"
+                                        title="Roll attack">🎲</button>
+                            </span>
+                        </div>
+                    `;
+                }).join('');
             }
         };
 
