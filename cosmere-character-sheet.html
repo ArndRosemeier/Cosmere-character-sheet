@@ -1595,10 +1595,8 @@
             <p>Stormlight Archive - Plotweaver System v1.01</p>
             <div class="header-controls">
                 <button onclick="app.createNewCharacter()">✨ New Character</button>
-                <button onclick="app.saveToLocalStorage()">💾 Save</button>
                 <button onclick="app.exportToFile()">📥 Export</button>
                 <button onclick="app.importFromFile()">📤 Import</button>
-                <button onclick="app.reloadRules()">🔄 Reload Rules</button>
                 <button class="danger" onclick="app.deleteCurrentCharacter()">🗑️ Delete Character</button>
             </div>
         </header>
@@ -3131,10 +3129,6 @@
                 console.log('Rules loaded:', this.rules);
             },
 
-            reloadRules: async function() {
-                // Rules are embedded - to update, edit cosmere-rules.json and run: python sync_rules.py
-                alert('Rules are embedded in this file.\n\nTo update:\n1. Edit cosmere-rules.json\n2. Run: python sync_rules.py\n3. Reload this page');
-            },
 
             createNewCharacter: function() {
                 const newChar = {
@@ -4456,13 +4450,42 @@
                 if (!this.currentCharacter) return;
                 
                 const dataStr = JSON.stringify(this.currentCharacter, null, 2);
+                const totalLevel = this.getTotalLevel();
+                const defaultFileName = `${this.currentCharacter.name.replace(/[^a-z0-9]/gi, '_')}_Lv${totalLevel}.json`;
+                
+                // Try to use File System Access API (Chrome, Edge, Opera)
+                if ('showSaveFilePicker' in window) {
+                    try {
+                        const handle = await window.showSaveFilePicker({
+                            suggestedName: defaultFileName,
+                            types: [{
+                                description: 'Character JSON',
+                                accept: { 'application/json': ['.json'] }
+                            }]
+                        });
+                        
+                        const writable = await handle.createWritable();
+                        await writable.write(dataStr);
+                        await writable.close();
+                        
+                        console.log('Character exported successfully');
+                        return;
+                    } catch (err) {
+                        // User cancelled or error occurred
+                        if (err.name !== 'AbortError') {
+                            console.error('Export error:', err);
+                        }
+                        return;
+                    }
+                }
+                
+                // Fallback for browsers without File System Access API
                 const blob = new Blob([dataStr], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
                 
                 const link = document.createElement('a');
                 link.href = url;
-                const totalLevel = this.getTotalLevel();
-                link.download = `${this.currentCharacter.name.replace(/[^a-z0-9]/gi, '_')}_${totalLevel}.json`;
+                link.download = defaultFileName;
                 link.click();
                 
                 URL.revokeObjectURL(url);
