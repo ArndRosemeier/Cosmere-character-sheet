@@ -2509,6 +2509,26 @@
         </div>
     </div>
 
+    <!-- Condition Selection Modal -->
+    <div id="conditionModal" class="dice-roller-modal" onclick="if(event.target === this) app.closeConditionModal()">
+        <div class="dice-roller-content" style="max-width: 700px;">
+            <div class="dice-roller-header">
+                <h2>🩹 Select Condition</h2>
+                <button class="modal-close" onclick="app.closeConditionModal()">×</button>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <input type="text" id="conditionSearch" placeholder="Search conditions..." 
+                       style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 6px; font-size: 1em;"
+                       oninput="app.filterConditions(this.value)">
+            </div>
+
+            <div style="max-height: 60vh; overflow-y: auto;">
+                <div id="conditionsList" class="weapon-selection-list"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Dice Roller Modal -->
     <div id="diceRollerModal" class="dice-roller-modal" onclick="if(event.target === this) diceRoller.close()">
         <div class="dice-roller-content">
@@ -5025,26 +5045,71 @@
             },
 
             addCondition: function() {
-                const conditionNames = this.rules.conditions.map(c => c.name).join('\n');
-                const conditionName = prompt(`Select condition:\n\n${conditionNames}\n\nEnter name:`);
-                if (!conditionName) return;
+                this.renderConditionSelectionModal();
+                document.getElementById('conditionModal').classList.add('active');
+            },
+
+            renderConditionSelectionModal: function() {
+                const container = document.getElementById('conditionsList');
+                const conditions = this.rules.conditions || [];
                 
-                const condition = this.rules.conditions.find(c => 
-                    c.name.toLowerCase() === conditionName.toLowerCase()
-                );
+                container.innerHTML = conditions.map(condition => `
+                    <div class="weapon-option" onclick="app.selectCondition('${condition.id}')">
+                        <div class="weapon-option-name">${condition.name}</div>
+                        <div class="weapon-option-stats">${condition.description}</div>
+                    </div>
+                `).join('');
+            },
+
+            selectCondition: function(conditionId) {
+                const condition = this.rules.conditions.find(c => c.id === conditionId);
+                if (!condition) return;
                 
-                if (!condition) {
-                    alert('Condition not found');
+                if (!this.currentCharacter.conditions) {
+                    this.currentCharacter.conditions = [];
+                }
+                
+                // Check if already added
+                if (this.currentCharacter.conditions.some(c => c.name === condition.name)) {
+                    alert('This condition is already active');
                     return;
                 }
                 
-                if (!this.currentCharacter.conditions) this.currentCharacter.conditions = [];
                 this.currentCharacter.conditions.push({
                     ...condition,
                     applied: new Date().toLocaleDateString()
                 });
+                
+                this.closeConditionModal();
                 this.renderConditions();
                 this.updateCharacter();
+            },
+
+            closeConditionModal: function() {
+                document.getElementById('conditionModal').classList.remove('active');
+            },
+
+            filterConditions: function(searchTerm) {
+                const container = document.getElementById('conditionsList');
+                const conditions = this.rules.conditions || [];
+                const term = searchTerm.toLowerCase();
+                
+                const filtered = conditions.filter(condition => 
+                    condition.name.toLowerCase().includes(term) ||
+                    condition.description.toLowerCase().includes(term)
+                );
+                
+                if (filtered.length === 0) {
+                    container.innerHTML = '<div class="help-text">No conditions found matching your search</div>';
+                    return;
+                }
+                
+                container.innerHTML = filtered.map(condition => `
+                    <div class="weapon-option" onclick="app.selectCondition('${condition.id}')">
+                        <div class="weapon-option-name">${condition.name}</div>
+                        <div class="weapon-option-stats">${condition.description}</div>
+                    </div>
+                `).join('');
             },
 
             removeCondition: function(index) {
