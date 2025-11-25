@@ -2427,10 +2427,8 @@
             <div class="section-content collapsed" id="connectionsContent">
                 <div class="connections-section" style="background: transparent; padding: 0; margin: 0; border-radius: 0;">
                     <div class="help-text">Track important NPCs, allies, enemies, and other relationships</div>
-                <div id="connectionsList" class="connections-list"></div>
-                <button onclick="app.addConnection()" style="margin-top: 10px;">+ Add Connection</button>
-            </div>
-
+                    <div id="connectionsList" class="connections-list"></div>
+                    <button onclick="app.addConnection()" style="margin-top: 10px;">+ Add Connection</button>
                 </div>
             </div><!-- End connectionsContent -->
 
@@ -2472,8 +2470,6 @@
                     <textarea id="characterBackstory" placeholder="Your character's history, important life events, motivations, fears, etc." 
                               onchange="app.updateCharacter()" style="min-height: 100px;"></textarea>
                 </div>
-            </div>
-
                 </div>
             </div><!-- End characterDetailsContent -->
 
@@ -2496,36 +2492,35 @@
                         <optgroup label="Radiant Orders" id="radiantOrderOptions"></optgroup>
                     </select>
                 </div>
-            </div>
 
-            <div class="surges-section" id="surgesSection" style="display: none;">
-                <h2>Surges</h2>
-                <div class="help-text" style="margin-bottom: 15px;">
-                    As a Radiant, you gain access to two surges based on your order. 
-                    <strong>Surge ranks</strong> use skill rank increases (same pool as skills). 
-                    <strong>Surge talents</strong> use talent points (same pool as path talents).
+                <div class="surges-section" id="surgesSection" style="display: none;">
+                    <h2>Surges</h2>
+                    <div class="help-text" style="margin-bottom: 15px;">
+                        As a Radiant, you gain access to two surges based on your order. 
+                        <strong>Surge ranks</strong> use skill rank increases (same pool as skills). 
+                        <strong>Surge talents</strong> use talent points (same pool as path talents).
+                    </div>
+                    <div id="surgesContainer"></div>
                 </div>
-                <div id="surgesContainer"></div>
-            </div>
 
-            <div class="expertises-section">
-                <h2>Expertises</h2>
-                <div class="expertise-list" id="expertiseList">
-                    <button class="add-expertise" onclick="app.addExpertise()">+ Add Expertise</button>
+                <div class="expertises-section">
+                    <h2>Expertises</h2>
+                    <div class="expertise-list" id="expertiseList">
+                        <button class="add-expertise" onclick="app.addExpertise()">+ Add Expertise</button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="input-group" style="margin-bottom: 20px;">
-                <label>Purpose</label>
-                <input type="text" id="purpose" placeholder="Your character's driving purpose..." oninput="app.updateCharacter(); app.validateCharacter();">
-                <div class="help-text">What drives your character? What is their ultimate goal?</div>
-            </div>
+                <div class="input-group" style="margin-bottom: 20px;">
+                    <label>Purpose</label>
+                    <input type="text" id="purpose" placeholder="Your character's driving purpose..." oninput="app.updateCharacter(); app.validateCharacter();">
+                    <div class="help-text">What drives your character? What is their ultimate goal?</div>
+                </div>
 
-            <div class="input-group" style="margin-bottom: 20px;">
-                <label>Obstacle</label>
-                <input type="text" id="obstacle" placeholder="Your character's main obstacle..." oninput="app.updateCharacter(); app.validateCharacter();">
-                <div class="help-text">What stands in their way? What weakness or challenge must they overcome?</div>
-            </div>
+                <div class="input-group" style="margin-bottom: 20px;">
+                    <label>Obstacle</label>
+                    <input type="text" id="obstacle" placeholder="Your character's main obstacle..." oninput="app.updateCharacter(); app.validateCharacter();">
+                    <div class="help-text">What stands in their way? What weakness or challenge must they overcome?</div>
+                </div>
 
                 </div>
             </div><!-- End pathsContent -->
