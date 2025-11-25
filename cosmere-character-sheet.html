@@ -1666,8 +1666,6 @@
                 </div>
             </div>
 
-            <div id="validationSummary" class="validation-summary"></div>
-
             <!-- ===== COMBAT & PLAY SECTION (Optimized for Tablets) ===== -->
             <div class="combat-play-section" id="combatPlaySection">
                 <div class="combat-play-header collapsed" onclick="app.toggleCombatPlay()">
@@ -1979,53 +1977,6 @@
 
             <!-- ===== CHARACTER BUILDING SECTION ===== -->
             <div class="character-building">
-            <div class="point-tracker">
-                <div class="point-tracker-header">
-                    <div class="point-tracker-title">Attribute Points</div>
-                    <div class="point-tracker-values">
-                        <span class="points-used" id="attributePointsUsed">0</span>
-                        <span>/</span>
-                        <span class="points-total" id="attributePointsTotal">10</span>
-                        <span class="points-remaining" id="attributePointsRemaining">10 remaining</span>
-                    </div>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="attributeProgressBar" style="width: 0%"></div>
-                </div>
-                <div class="help-text">Starting characters have 12 attribute points to distribute (minimum 0, maximum 5 per attribute)</div>
-            </div>
-
-            <div class="point-tracker">
-                <div class="point-tracker-header">
-                    <div class="point-tracker-title">Skill Ranks</div>
-                    <div class="point-tracker-values">
-                        <span class="points-used" id="skillRanksUsed">0</span>
-                        <span>/</span>
-                        <span class="points-total" id="skillRanksTotal">0</span>
-                        <span class="points-remaining" id="skillRanksRemaining">0 remaining</span>
-                    </div>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="skillProgressBar" style="width: 0%"></div>
-                </div>
-                <div class="help-text">Skill ranks are gained through leveling and your chosen path</div>
-            </div>
-
-            <div class="point-tracker">
-                <div class="point-tracker-header">
-                    <div class="point-tracker-title">Talent Points</div>
-                    <div class="point-tracker-values">
-                        <span class="points-used" id="talentPointsUsed">0</span>
-                        <span>/</span>
-                        <span class="points-total" id="talentPointsTotal">0</span>
-                        <span class="points-remaining" id="talentPointsRemaining">0 remaining</span>
-                    </div>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="talentProgressBar" style="width: 0%"></div>
-                </div>
-                <div class="help-text" id="talentPointsBreakdown">Talents gained through leveling and ancestry bonuses</div>
-            </div>
 
             <!-- Character Details Section -->
             <div class="section-header collapsed" id="characterDetailsHeader" onclick="app.toggleSection('characterDetails')">
@@ -2034,6 +1985,57 @@
             </div>
             <div class="section-content collapsed" id="characterDetailsContent">
                 <div class="character-details-section">
+                    <!-- Point Trackers -->
+                    <div class="point-tracker">
+                        <div class="point-tracker-header">
+                            <div class="point-tracker-title">Attribute Points</div>
+                            <div class="point-tracker-values">
+                                <span class="points-used" id="attributePointsUsed">0</span>
+                                <span>/</span>
+                                <span class="points-total" id="attributePointsTotal">10</span>
+                                <span class="points-remaining" id="attributePointsRemaining">10 remaining</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="attributeProgressBar" style="width: 0%"></div>
+                        </div>
+                        <div class="help-text">Starting characters have 12 attribute points to distribute (minimum 0, maximum 5 per attribute)</div>
+                    </div>
+
+                    <div class="point-tracker">
+                        <div class="point-tracker-header">
+                            <div class="point-tracker-title">Skill Ranks</div>
+                            <div class="point-tracker-values">
+                                <span class="points-used" id="skillRanksUsed">0</span>
+                                <span>/</span>
+                                <span class="points-total" id="skillRanksTotal">0</span>
+                                <span class="points-remaining" id="skillRanksRemaining">0 remaining</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="skillProgressBar" style="width: 0%"></div>
+                        </div>
+                        <div class="help-text">Skill ranks are gained through leveling and your chosen path</div>
+                    </div>
+
+                    <div class="point-tracker">
+                        <div class="point-tracker-header">
+                            <div class="point-tracker-title">Talent Points</div>
+                            <div class="point-tracker-values">
+                                <span class="points-used" id="talentPointsUsed">0</span>
+                                <span>/</span>
+                                <span class="points-total" id="talentPointsTotal">0</span>
+                                <span class="points-remaining" id="talentPointsRemaining">0 remaining</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="talentProgressBar" style="width: 0%"></div>
+                        </div>
+                        <div class="help-text" id="talentPointsBreakdown">Talents gained through leveling and ancestry bonuses</div>
+                    </div>
+
+                    <div id="validationSummary" class="validation-summary"></div>
+
                     <!-- Basic Information -->
                     <div class="sheet-header">
                         <div class="input-group">
