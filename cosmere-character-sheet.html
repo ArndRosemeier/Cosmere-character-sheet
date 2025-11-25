@@ -2349,8 +2349,15 @@
 
                 title.textContent = label || 'Roll';
                 
-                // If this is a weapon attack with damage, show both totals prominently
-                if (result.damageTotal !== undefined) {
+                // If this is a weapon attack with hit/graze damage, show all values prominently
+                if (result.hitDamage !== undefined && result.grazeDamage !== undefined) {
+                    resultElem.innerHTML = `
+                        <div style="font-size: 2em; font-weight: bold;">${result.total}</div>
+                        <div style="font-size: 0.8em; color: #999; margin-top: 5px;">
+                            Hit: ${result.hitDamage} dmg | Graze: ${result.grazeDamage} dmg
+                        </div>
+                    `;
+                } else if (result.damageTotal !== undefined) {
                     resultElem.innerHTML = `${result.total} <span style="font-size: 0.7em; color: #999;">ATK</span> / ${result.damageTotal} <span style="font-size: 0.7em; color: #999;">DMG</span>`;
                 } else {
                     resultElem.textContent = result.total;
@@ -2444,7 +2451,11 @@
                 let breakdown = plotDieInfo + `<strong>Attack:</strong> ${attackInfo} = <strong>${attackTotal}</strong>`;
                 
                 if (damageResult) {
-                    breakdown += `<br><strong>Damage:</strong> ${damageResult.breakdown.replace(/<br>/g, ' ')} = <strong>${damageResult.total}</strong>`;
+                    const hitDamage = damageResult.total + attackBonus; // Hit = dice + skill modifier
+                    const grazeDamage = damageResult.total; // Graze = dice only
+                    
+                    breakdown += `<br><strong>Damage (if hit):</strong> ${damageResult.breakdown.replace(/<br>/g, ' ')} + ${attackBonus} = <strong>${hitDamage}</strong>`;
+                    breakdown += `<br><strong>Damage (if graze):</strong> ${damageResult.breakdown.replace(/<br>/g, ' ')} = <strong>${grazeDamage}</strong>`;
                 } else {
                     breakdown += `<br><strong>Damage:</strong> ${damage}`;
                 }
@@ -2452,6 +2463,8 @@
                 const result = {
                     total: attackTotal,
                     damageTotal: damageResult ? damageResult.total : 0,
+                    hitDamage: damageResult ? damageResult.total + attackBonus : 0,
+                    grazeDamage: damageResult ? damageResult.total : 0,
                     breakdown: breakdown,
                     diceRolls: [d20Roll, ...(damageResult ? damageResult.diceRolls : [])]
                 };
