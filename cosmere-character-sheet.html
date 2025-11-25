@@ -3973,7 +3973,34 @@
                 const newLevel = path.level + delta;
                 if (newLevel < 0 || newLevel > 10) return;
                 
+                // Calculate old max values before level change
+                const oldTotalLevel = this.getTotalLevel();
+                const oldHasRadiant = this.currentCharacter.paths.some(p => p.type === 'radiant' && p.level > 0);
+                const oldMaxHealth = this.rules.resources.health.baseValue + (oldTotalLevel * this.rules.resources.health.perLevel);
+                const oldMaxFocus = this.rules.resources.focus.baseValue + (oldTotalLevel * this.rules.resources.focus.perLevel);
+                const oldMaxInvestiture = oldHasRadiant ? 
+                    this.rules.resources.investiture.baseValue + (oldTotalLevel * this.rules.resources.investiture.perLevel) : 0;
+                
+                // Apply level change
                 path.level = newLevel;
+                
+                // Calculate new max values after level change
+                const newTotalLevel = this.getTotalLevel();
+                const newHasRadiant = this.currentCharacter.paths.some(p => p.type === 'radiant' && p.level > 0);
+                const newMaxHealth = this.rules.resources.health.baseValue + (newTotalLevel * this.rules.resources.health.perLevel);
+                const newMaxFocus = this.rules.resources.focus.baseValue + (newTotalLevel * this.rules.resources.focus.perLevel);
+                const newMaxInvestiture = newHasRadiant ? 
+                    this.rules.resources.investiture.baseValue + (newTotalLevel * this.rules.resources.investiture.perLevel) : 0;
+                
+                // Adjust current values by the difference (leveling up increases current, leveling down decreases current)
+                const char = this.currentCharacter;
+                if (char.currentHealth === undefined) throw new Error('Current health is undefined');
+                if (char.currentFocus === undefined) throw new Error('Current focus is undefined');
+                if (char.currentInvestiture === undefined) throw new Error('Current investiture is undefined');
+                
+                char.currentHealth = Math.max(0, char.currentHealth + (newMaxHealth - oldMaxHealth));
+                char.currentFocus = Math.max(0, char.currentFocus + (newMaxFocus - oldMaxFocus));
+                char.currentInvestiture = Math.max(0, char.currentInvestiture + (newMaxInvestiture - oldMaxInvestiture));
                 
                 // Full re-render to ensure all derived values update
                 this.renderCharacterSheet();
