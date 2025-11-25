@@ -2027,32 +2027,67 @@
                 <div class="help-text" id="talentPointsBreakdown">Talents gained through leveling and ancestry bonuses</div>
             </div>
 
-            <!-- Basic Information Section -->
-            <div class="section-header collapsed" id="basicInfoHeader" onclick="app.toggleSection('basicInfo')">
-                <h2>📝 Basic Information</h2>
+            <!-- Character Details Section -->
+            <div class="section-header collapsed" id="characterDetailsHeader" onclick="app.toggleSection('characterDetails')">
+                <h2>👤 Character Details</h2>
                 <span class="section-toggle-icon">▼</span>
             </div>
-            <div class="section-content collapsed" id="basicInfoContent">
-                <div class="sheet-header">
-                    <div class="input-group">
-                        <label>Character Name</label>
-                        <input type="text" id="characterName" placeholder="Enter name..." oninput="app.updateCharacter(); app.recalculateAll();">
+            <div class="section-content collapsed" id="characterDetailsContent">
+                <div class="character-details-section">
+                    <!-- Basic Information -->
+                    <div class="sheet-header">
+                        <div class="input-group">
+                            <label>Character Name</label>
+                            <input type="text" id="characterName" placeholder="Enter name..." oninput="app.updateCharacter(); app.recalculateAll();">
+                        </div>
+                        <div class="input-group">
+                            <label>Player Name</label>
+                            <input type="text" id="playerName" placeholder="Your name..." onchange="app.updateCharacter()">
+                        </div>
+                        <div class="input-group">
+                            <label>Ancestry</label>
+                            <select id="ancestry" onchange="app.updateCharacter()"></select>
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <label>Player Name</label>
-                        <input type="text" id="playerName" placeholder="Your name..." onchange="app.updateCharacter()">
-                    </div>
-                    <div class="input-group">
-                        <label>Ancestry</label>
-                        <select id="ancestry" onchange="app.updateCharacter()"></select>
-                    </div>
-                </div>
 
-                <div class="input-group" style="margin-bottom: 20px;">
-                    <label>Culture</label>
-                    <select id="culture" onchange="app.updateCharacter()"></select>
+                    <div class="input-group" style="margin-bottom: 20px;">
+                        <label>Culture</label>
+                        <select id="culture" onchange="app.updateCharacter()"></select>
+                    </div>
+
+                    <!-- Physical Details -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                        <div class="input-group">
+                            <label>Age</label>
+                            <input type="text" id="characterAge" placeholder="25" onchange="app.updateCharacter()">
+                        </div>
+                        <div class="input-group">
+                            <label>Gender/Pronouns</label>
+                            <input type="text" id="characterGender" placeholder="She/Her" onchange="app.updateCharacter()">
+                        </div>
+                        <div class="input-group">
+                            <label>Height</label>
+                            <input type="text" id="characterHeight" placeholder="5'8\"" onchange="app.updateCharacter()">
+                        </div>
+                        <div class="input-group">
+                            <label>Weight</label>
+                            <input type="text" id="characterWeight" placeholder="140 lbs" onchange="app.updateCharacter()">
+                        </div>
+                    </div>
+
+                    <div class="input-group" style="margin-bottom: 15px;">
+                        <label>Physical Appearance</label>
+                        <textarea id="characterAppearance" placeholder="Describe your character's appearance, distinguishing features, typical clothing, etc." 
+                                  onchange="app.updateCharacter()" style="min-height: 80px;"></textarea>
+                    </div>
+
+                    <div class="input-group" style="margin-bottom: 15px;">
+                        <label>Backstory</label>
+                        <textarea id="characterBackstory" placeholder="Your character's history, important life events, motivations, fears, etc." 
+                                  onchange="app.updateCharacter()" style="min-height: 100px;"></textarea>
+                    </div>
                 </div>
-            </div>
+            </div><!-- End characterDetailsContent -->
 
             <!-- Attributes & Skills Section -->
             <div class="section-header collapsed" id="attributesSkillsHeader" onclick="app.toggleSection('attributesSkills')">
@@ -2423,47 +2458,6 @@
                     <button onclick="app.addConnection()" style="margin-top: 10px;">+ Add Connection</button>
                 </div>
             </div><!-- End connectionsContent -->
-
-            <!-- Character Details Section -->
-            <div class="section-header collapsed" id="characterDetailsHeader" onclick="app.toggleSection('characterDetails')">
-                <h2>👤 Character Details</h2>
-                <span class="section-toggle-icon">▼</span>
-            </div>
-            <div class="section-content collapsed" id="characterDetailsContent">
-                <div class="character-details-section">
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
-                    <div class="input-group">
-                        <label>Age</label>
-                        <input type="text" id="characterAge" placeholder="25" onchange="app.updateCharacter()">
-                    </div>
-                    <div class="input-group">
-                        <label>Gender/Pronouns</label>
-                        <input type="text" id="characterGender" placeholder="She/Her" onchange="app.updateCharacter()">
-                    </div>
-                    <div class="input-group">
-                        <label>Height</label>
-                        <input type="text" id="characterHeight" placeholder="5'8\"" onchange="app.updateCharacter()">
-                    </div>
-                    <div class="input-group">
-                        <label>Weight</label>
-                        <input type="text" id="characterWeight" placeholder="140 lbs" onchange="app.updateCharacter()">
-                    </div>
-                </div>
-
-                <div class="input-group" style="margin-bottom: 15px;">
-                    <label>Physical Appearance</label>
-                    <textarea id="characterAppearance" placeholder="Describe your character's appearance, distinguishing features, typical clothing, etc." 
-                              onchange="app.updateCharacter()" style="min-height: 80px;"></textarea>
-                </div>
-
-                <div class="input-group" style="margin-bottom: 15px;">
-                    <label>Backstory</label>
-                    <textarea id="characterBackstory" placeholder="Your character's history, important life events, motivations, fears, etc." 
-                              onchange="app.updateCharacter()" style="min-height: 100px;"></textarea>
-                </div>
-                </div>
-            </div><!-- End characterDetailsContent -->
 
             <!-- Paths & Talents Section -->
             <div class="section-header collapsed" id="pathsHeader" onclick="app.toggleSection('paths')">
