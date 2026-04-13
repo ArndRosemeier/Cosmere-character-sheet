@@ -5120,6 +5120,44 @@
                 char.equippedArmor = equippedArmorItem ? equippedArmorItem.armorId : null;
             },
 
+            getEquippedWeaponDisplayData: function() {
+                const char = this.currentCharacter;
+                return (char.inventory || [])
+                    .filter(i => i.type === 'weapon' && i.equipped && i.weaponData)
+                    .map(i => {
+                        const w = i.weaponData;
+                        const skillData = this.rules.skills.list.find(s => s.id === w.skill);
+                        const skillRank = skillData ? (char.skills[w.skill] ?? 0) : 0;
+                        const attrValue = skillData ? (char.attributes[skillData.attribute] ?? 0) : 0;
+                        return {
+                            name: w.name, damage: w.damage, damageType: w.damageType,
+                            range: w.range, attackBonus: attrValue + skillRank,
+                            skillName: skillData ? skillData.name : 'Unknown',
+                            traits: w.traits || []
+                        };
+                    });
+            },
+
+            getEquippedArmorDisplayData: function() {
+                const char = this.currentCharacter;
+                const item = (char.inventory || []).find(i => i.type === 'armor' && i.equipped && i.armorId);
+                if (!item) return null;
+                const armorDef = this.rules.armor.find(a => a.id === item.armorId);
+                if (!armorDef) return null;
+                return {
+                    name: armorDef.name, deflect: armorDef.deflect,
+                    weight: armorDef.weight, traits: armorDef.traits || []
+                };
+            },
+
+            refreshAfterEquipChange: function() {
+                this.syncEquippedFromInventory();
+                this.renderEquippedSummary();
+                this.renderInventory();
+                this.recalculateAll();
+                this.updateCharacter();
+            },
+
             addWeaponToInventory: function() {
                 this.renderWeaponModal();
                 document.getElementById('weaponModal').classList.add('active');
@@ -5195,68 +5233,43 @@
                 });
 
                 this.closeWeaponModal();
-                this.syncEquippedFromInventory();
-                this.renderEquippedSummary();
-                this.renderInventory();
-                this.updateCharacter();
+                this.refreshAfterEquipChange();
             },
 
             equipWeaponFromInventory: function(inventoryIndex) {
                 const item = this.currentCharacter.inventory[inventoryIndex];
                 if (!item || item.type !== 'weapon' || !item.weaponData) return;
 
-                // Auto-unequip all other weapons
                 for (const invItem of this.currentCharacter.inventory) {
                     if (invItem.type === 'weapon') invItem.equipped = false;
                 }
                 item.equipped = true;
-
-                this.syncEquippedFromInventory();
-                this.renderEquippedSummary();
-                this.renderInventory();
-                this.calculateAttackBonuses();
-                this.updateCharacter();
+                this.refreshAfterEquipChange();
             },
 
             unequipWeaponFromInventory: function(inventoryIndex) {
                 const item = this.currentCharacter.inventory[inventoryIndex];
                 if (!item || item.type !== 'weapon') return;
                 item.equipped = false;
-
-                this.syncEquippedFromInventory();
-                this.renderEquippedSummary();
-                this.renderInventory();
-                this.calculateAttackBonuses();
-                this.updateCharacter();
+                this.refreshAfterEquipChange();
             },
 
             equipArmorFromInventory: function(inventoryIndex) {
                 const item = this.currentCharacter.inventory[inventoryIndex];
                 if (!item || item.type !== 'armor' || !item.armorId) return;
 
-                // Auto-unequip all other armor
                 for (const invItem of this.currentCharacter.inventory) {
                     if (invItem.type === 'armor') invItem.equipped = false;
                 }
                 item.equipped = true;
-
-                this.syncEquippedFromInventory();
-                this.renderEquippedSummary();
-                this.renderInventory();
-                this.recalculateAll();
-                this.updateCharacter();
+                this.refreshAfterEquipChange();
             },
 
             unequipArmorFromInventory: function(inventoryIndex) {
                 const item = this.currentCharacter.inventory[inventoryIndex];
                 if (!item || item.type !== 'armor') return;
                 item.equipped = false;
-
-                this.syncEquippedFromInventory();
-                this.renderEquippedSummary();
-                this.renderInventory();
-                this.recalculateAll();
-                this.updateCharacter();
+                this.refreshAfterEquipChange();
             },
 
             showAddArmorPicker: function() {
@@ -5297,63 +5310,47 @@
                 });
 
                 document.getElementById('armorAddPicker').style.display = 'none';
-                this.renderInventory();
-                this.renderEquippedSummary();
-                this.updateCharacter();
+                this.refreshAfterEquipChange();
             },
 
             renderEquippedSummary: function() {
                 const container = document.getElementById('equippedSummary');
-                const char = this.currentCharacter;
                 let html = '';
 
-                // Equipped weapon
-                const equippedWeapons = (char.inventory || []).filter(i => i.type === 'weapon' && i.equipped && i.weaponData);
-                if (equippedWeapons.length > 0) {
-                    for (const item of equippedWeapons) {
-                        const w = item.weaponData;
-                        const skillData = this.rules.skills.list.find(s => s.id === w.skill);
-                        if (!skillData) continue;
-                        const skillRank = char.skills[w.skill] ?? 0;
-                        const attrValue = char.attributes[skillData.attribute] ?? 0;
-                        const attackBonus = attrValue + skillRank;
-                        html += `<div class="item-card">
-                            <div style="flex: 1;">
-                                <div style="font-weight: bold; font-size: 1.1em; margin-bottom: 6px;">⚔️ ${w.name}</div>
-                                <div class="item-details">
-                                    <div class="item-stat"><div class="item-stat-label">Damage</div><div class="item-stat-value">${w.damage} ${w.damageType}</div></div>
-                                    <div class="item-stat"><div class="item-stat-label">Range</div><div class="item-stat-value">${w.range}</div></div>
-                                    <div class="item-stat"><div class="item-stat-label">Attack</div><div class="item-stat-value">+${attackBonus}</div></div>
-                                    <div class="item-stat"><div class="item-stat-label">Skill</div><div class="item-stat-value">${skillData.name}</div></div>
-                                </div>
-                                ${w.traits && w.traits.length > 0 ?
-                                    `<div style="margin-top: 6px; font-size: 0.85em; color: var(--text-secondary);"><strong>Traits:</strong> ${w.traits.join(', ')}</div>` : ''}
+                const weapons = this.getEquippedWeaponDisplayData();
+                for (const w of weapons) {
+                    html += `<div class="item-card">
+                        <div style="flex: 1;">
+                            <div style="font-weight: bold; font-size: 1.1em; margin-bottom: 6px;">⚔️ ${w.name}</div>
+                            <div class="item-details">
+                                <div class="item-stat"><div class="item-stat-label">Damage</div><div class="item-stat-value">${w.damage} ${w.damageType}</div></div>
+                                <div class="item-stat"><div class="item-stat-label">Range</div><div class="item-stat-value">${w.range}</div></div>
+                                <div class="item-stat"><div class="item-stat-label">Attack</div><div class="item-stat-value">+${w.attackBonus}</div></div>
+                                <div class="item-stat"><div class="item-stat-label">Skill</div><div class="item-stat-value">${w.skillName}</div></div>
                             </div>
-                            <div class="item-actions">
-                                <button class="inline-dice-btn"
-                                        onclick="diceRoller.rollWeaponAttack(\`${w.name}\`, ${attackBonus}, \`${w.damage}\`)"
-                                        title="Roll attack">🎲</button>
-                            </div>
-                        </div>`;
-                    }
+                            ${w.traits.length > 0 ?
+                                `<div style="margin-top: 6px; font-size: 0.85em; color: var(--text-secondary);"><strong>Traits:</strong> ${w.traits.join(', ')}</div>` : ''}
+                        </div>
+                        <div class="item-actions">
+                            <button class="inline-dice-btn"
+                                    onclick="diceRoller.rollWeaponAttack(\`${w.name}\`, ${w.attackBonus}, \`${w.damage}\`)"
+                                    title="Roll attack">🎲</button>
+                        </div>
+                    </div>`;
                 }
 
-                // Equipped armor
-                const equippedArmorItem = (char.inventory || []).find(i => i.type === 'armor' && i.equipped && i.armorId);
-                if (equippedArmorItem) {
-                    const armorDef = this.rules.armor.find(a => a.id === equippedArmorItem.armorId);
-                    if (armorDef) {
-                        html += `<div class="item-card">
-                            <div style="flex: 1;">
-                                <div style="font-weight: bold; font-size: 1.1em; margin-bottom: 6px;">🛡️ ${armorDef.name}</div>
-                                <div class="item-details">
-                                    <div class="item-stat"><div class="item-stat-label">Deflect</div><div class="item-stat-value">${armorDef.deflect}</div></div>
-                                    <div class="item-stat"><div class="item-stat-label">Weight</div><div class="item-stat-value">${armorDef.weight} lbs</div></div>
-                                    <div class="item-stat"><div class="item-stat-label">Traits</div><div class="item-stat-value">${armorDef.traits.length > 0 ? armorDef.traits.join(', ') : 'None'}</div></div>
-                                </div>
+                const armor = this.getEquippedArmorDisplayData();
+                if (armor) {
+                    html += `<div class="item-card">
+                        <div style="flex: 1;">
+                            <div style="font-weight: bold; font-size: 1.1em; margin-bottom: 6px;">🛡️ ${armor.name}</div>
+                            <div class="item-details">
+                                <div class="item-stat"><div class="item-stat-label">Deflect</div><div class="item-stat-value">${armor.deflect}</div></div>
+                                <div class="item-stat"><div class="item-stat-label">Weight</div><div class="item-stat-value">${armor.weight} lbs</div></div>
+                                <div class="item-stat"><div class="item-stat-label">Traits</div><div class="item-stat-value">${armor.traits.length > 0 ? armor.traits.join(', ') : 'None'}</div></div>
                             </div>
-                        </div>`;
-                    }
+                        </div>
+                    </div>`;
                 }
 
                 if (!html) {
@@ -5669,12 +5666,7 @@
                 }
 
                 this.currentCharacter.inventory.splice(index, 1);
-                this.syncEquippedFromInventory();
-                this.renderEquippedSummary();
-                this.renderInventory();
-                this.calculateAttackBonuses();
-                this.recalculateAll();
-                this.updateCharacter();
+                this.refreshAfterEquipChange();
             },
 
             // Universal section toggle function
@@ -6339,41 +6331,30 @@
                 `;
             },
 
-            // Render weapons for Combat & Play section
             renderPlayWeapons: function() {
                 const container = document.getElementById('playWeaponsList');
                 if (!container || !this.currentCharacter) return;
-                
-                if (!this.currentCharacter.weapons || this.currentCharacter.weapons.length === 0) {
+
+                const weapons = this.getEquippedWeaponDisplayData();
+                if (weapons.length === 0) {
                     container.innerHTML = '<div class="help-text">No weapons equipped.</div>';
                     return;
                 }
-                
-                container.innerHTML = this.currentCharacter.weapons.map(weapon => {
-                    const skillData = this.rules.skills.list.find(s => s.id === weapon.skill);
-                    if (!skillData) throw new Error(`Weapon skill ${weapon.skill} not found in rules`);
-                    const skillRank = this.currentCharacter.skills[weapon.skill];
-                    if (skillRank === undefined) throw new Error(`Skill rank for ${weapon.skill} is undefined`);
-                    const attr = skillData.attribute;
-                    const attrValue = this.currentCharacter.attributes[attr];
-                    if (attrValue === undefined) throw new Error(`Attribute ${attr} is undefined`);
-                    const attackBonus = attrValue + skillRank;
-                    
-                    return `
-                        <div class="play-stat-row" style="flex-wrap: wrap;">
-                            <span class="play-stat-label" style="flex: 1; min-width: 150px;">
-                                <strong>${weapon.name}</strong><br>
-                                <span style="font-size: 0.85em; color: #999;">${weapon.damage} ${weapon.damageType} | ${weapon.range}</span>
-                            </span>
-                            <span class="play-stat-value">
-                                <span>+${attackBonus}</span>
-                                <button class="play-dice-btn" 
-                                        onclick="diceRoller.rollWeaponAttack(\`${weapon.name}\`, ${attackBonus}, \`${weapon.damage}\`)"
-                                        title="Roll attack">🎲</button>
-                            </span>
-                        </div>
-                    `;
-                }).join('');
+
+                container.innerHTML = weapons.map(w => `
+                    <div class="play-stat-row" style="flex-wrap: wrap;">
+                        <span class="play-stat-label" style="flex: 1; min-width: 150px;">
+                            <strong>${w.name}</strong><br>
+                            <span style="font-size: 0.85em; color: #999;">${w.damage} ${w.damageType} | ${w.range}</span>
+                        </span>
+                        <span class="play-stat-value">
+                            <span>+${w.attackBonus}</span>
+                            <button class="play-dice-btn"
+                                    onclick="diceRoller.rollWeaponAttack(\`${w.name}\`, ${w.attackBonus}, \`${w.damage}\`)"
+                                    title="Roll attack">🎲</button>
+                        </span>
+                    </div>
+                `).join('');
             }
         };
 
